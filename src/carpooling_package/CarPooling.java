@@ -46,7 +46,7 @@ class Ride {
 	route carRoute;
 	Car car;
 
-}
+}	
 
 class Ticket {
 	private double price;
@@ -66,12 +66,17 @@ abstract class passenger {
 
 }
 
-class nonSubscriber extends passenger{
+interface iprice{
 	
 	
 }
 
-class subscriber extends passenger{
+class nonSubscriber extends passenger implements iprice{
+	
+	
+}
+
+class subscriber extends passenger implements iprice{
 	
 	
 }

@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 /**
  * route that has a start Location and end Location
+ * 
  * @author Beeka
  */
 class Route {
@@ -325,31 +326,44 @@ abstract class Passenger {
  * @author Beeka
  */
 
-
 /**
  * class that is responsible for calculating the discount for passengers
  * depending on their types this class calculate the discount manually by just
- * taking an object form Iprice interface
+ * taking an object form passenger abstract
  * 
  * @author Beeka
  */
-class Discount {
-	// this is private because i dont want to make an object from this Discount
+abstract class Discount {
+	// this is abstract because i dont want to make an object from this Discount
 	// class
-	private Discount() {
-
-	}
 
 	/**
-	 * function to getDiscount by taking object of the passenger to know its type if
-	 * he subscribe or he didn't subscribe then takes the ticket
+	 * function to getDiscount by taking object of the passenger to know its type
+	 * automatically by calling discount in each passenger class if he subscribe or
+	 * he didn't subscribe then takes the ticket
 	 * 
 	 * @param T         ticket object
 	 * @param passenger object of the type of passenger
-	 * @return
+	 * @return discount of the ticket
 	 */
 	public static double getDiscount(Ticket T, Passenger passenger) {
 		return (T.getPrice() - passenger.discount() * T.getPrice());
+	}
+
+	/**
+	 * function to getDiscount by taking object of the passenger to know its type
+	 * automatically by calling discount in each passenger class if he subscribe or
+	 * he didn't subscribe then takes the ride
+	 * 
+	 * @param T         ticket object
+	 * @param passenger object of the type of passenger
+	 * @return discount of the ride
+	 */
+	
+	public static double getDiscount(Ride r, Passenger passenger) {
+		Ticket t = r.getTicket();
+		return Discount.getDiscount(t, passenger);
+
 	}
 
 }
@@ -379,7 +393,7 @@ interface Isubscribable {
  * 
  * @author Beeka
  */
-class NonSubscriber extends Passenger implements  Isubscribable {
+class NonSubscriber extends Passenger implements Isubscribable {
 	/**
 	 * initialize non subscriber object with empty array of rides that can buy
 	 */
@@ -447,7 +461,9 @@ public class CarPooling {
 		Car m = new Car("123", "ahmed", 5, 10);
 		Ticket t = new Ticket(100, m);
 		Passenger p = new Subscriber("ad", 13);
-		double a = Discount.getDiscount(t, p);
+		Route f = new Route("as", "DS");
+		Ride r = new Ride(f, m, t);
+		double a = Discount.getDiscount(r, p);
 		System.out.print(a);
 	}
 

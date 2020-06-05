@@ -7,7 +7,6 @@ import java.util.Scanner;
  * route that has a start Location and end Location
  * 
  * @author Beeka
- *
  */
 class Route {
 	private String startLocation;
@@ -43,7 +42,6 @@ class Route {
 	}
 
 	/**
-	 * 
 	 * @return start location of the route
 	 */
 	public String getStartLocation() {
@@ -51,7 +49,6 @@ class Route {
 	}
 
 	/**
-	 * 
 	 * @return end location of the route
 	 */
 	public String getEndLocation() {
@@ -71,7 +68,6 @@ class Route {
  */
 interface Icode {
 	/**
-	 * 
 	 * @return Car code number
 	 */
 	public String getCarCode();
@@ -82,7 +78,6 @@ interface Icode {
  * passengers
  * 
  * @author Beeka
- *
  */
 class Car implements Icode {
 	private final String Codenumber;
@@ -270,7 +265,6 @@ class Ride {
 	}
 
 	/**
-	 * 
 	 * @return car object
 	 */
 	public Car getCar() {
@@ -278,7 +272,6 @@ class Ride {
 	}
 
 	/**
-	 * 
 	 * @return route object
 	 */
 	public Route getRoute() {
@@ -286,7 +279,6 @@ class Ride {
 	}
 
 	/**
-	 * 
 	 * @return ticket object
 	 */
 	public Ticket getTicket() {
@@ -300,7 +292,6 @@ class Ride {
  * or multiple rides
  * 
  * @author Beeka
- *
  */
 abstract class Passenger {
 
@@ -308,12 +299,15 @@ abstract class Passenger {
 
 	/**
 	 * initialize passenger object with empty array of rides that can buy
-	 * 
-	 * 
 	 */
 	public Passenger() {
 		rides = new ArrayList<Ride>();
 	}
+
+	/**
+	 * @return ticket discount for the classes that extends that abstract class
+	 */
+	abstract public double discount();
 
 	/**
 	 * add a ride to this passenger
@@ -330,14 +324,8 @@ abstract class Passenger {
  * interface resposible for determining ticket price
  * 
  * @author Beeka
- *
  */
-interface Iprice {
-	/**
-	 * @return ticket discount for the classes that implement that interface
-	 */
-	public double discount();
-}
+
 
 /**
  * class that is responsible for calculating the discount for passengers
@@ -345,15 +333,23 @@ interface Iprice {
  * taking an object form Iprice interface
  * 
  * @author Beeka
- *
  */
 class Discount {
-
+	// this is private because i dont want to make an object from this Discount
+	// class
 	private Discount() {
 
 	}
 
-	public double getDiscount(Ticket T, Iprice passenger) {
+	/**
+	 * function to getDiscount by taking object of the passenger to know its type if
+	 * he subscribe or he didn't subscribe then takes the ticket
+	 * 
+	 * @param T         ticket object
+	 * @param passenger object of the type of passenger
+	 * @return
+	 */
+	public static double getDiscount(Ticket T, Passenger passenger) {
 		return (T.getPrice() - passenger.discount() * T.getPrice());
 	}
 
@@ -383,9 +379,8 @@ interface Isubscribable {
  * non subscriber passenger class
  * 
  * @author Beeka
- *
  */
-class NonSubscriber extends Passenger implements Iprice, Isubscribable {
+class NonSubscriber extends Passenger implements  Isubscribable {
 	/**
 	 * initialize non subscriber object with empty array of rides that can buy
 	 */
@@ -420,7 +415,7 @@ class NonSubscriber extends Passenger implements Iprice, Isubscribable {
  * 
  * @author Beeka
  */
-class Subscriber extends Passenger implements Iprice {
+class Subscriber extends Passenger {
 	int reservedTrips;
 	public final String name;
 	public int age;
@@ -450,7 +445,11 @@ class Subscriber extends Passenger implements Iprice {
 public class CarPooling {
 
 	public static void main(String[] args) {
-
+		Car m = new Car("123", "ahmed", 5, 10);
+		Ticket t = new Ticket(100, m);
+		Passenger p = new Subscriber("ad", 13);
+		double a = Discount.getDiscount(t, p);
+		System.out.print(a);
 	}
 
 }

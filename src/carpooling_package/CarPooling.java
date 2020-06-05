@@ -309,7 +309,7 @@ abstract class Passenger {
 	/**
 	 * initialize passenger with ride
 	 * 
-	 * @param ride
+	 * @param ride of the
 	 */
 	public Passenger(Ride ride) {
 		rides = new ArrayList<Ride>();
@@ -319,7 +319,7 @@ abstract class Passenger {
 	/**
 	 * initialize passenger object
 	 * 
-	 * @param array list of all rides that passengar will make
+	 * @param rides array list of all rides that passengar will make
 	 */
 	public Passenger(ArrayList<Ride> rides) {
 		this.rides = rides;
@@ -328,7 +328,7 @@ abstract class Passenger {
 	/**
 	 * add a ride to this passenger
 	 * 
-	 * @param ride
+	 * @param ride ride of the passenger
 	 */
 	protected void addride(Ride ride) {
 		rides.add(ride);
@@ -358,27 +358,35 @@ interface Iprice {
 	double TicketPrice(Ticket ticket);
 
 }
+
 /**
  * interface that are resposible for detremining if you can subscribe or not
+ * 
  * @author Beeka
  *
  */
 interface Isubscribable {
 	int age = 35; // minimum age to subscibe;
 	int trips = 10; // minmum trips you can subsribe to
+
 	/**
 	 * check if the passenger can subscribe or not
-	 * @param age age of the passenger
+	 * 
+	 * @param age   age of the passenger
 	 * @param Trips number of trips of the passenger
-	 * @return true if he can subscribe , false otherwise 
+	 * @return true if he can subscribe , false otherwise
 	 */
 	public boolean cansubscribe(int age, int Trips);
 }
 
 class NonSubscriber extends Passenger implements Iprice, Isubscribable {
-	
-	public NonSubscriber() {
-		super();
+
+	public NonSubscriber(Ride ride) {
+		super(ride);
+	}
+
+	public NonSubscriber(ArrayList<Ride> rides) {
+		super(rides);
 	}
 
 	@Override
@@ -407,8 +415,14 @@ class Subscriber extends Passenger implements Iprice {
 	public final String name;
 	public int age;
 
-	public Subscriber(String name, int age) {
-		super();
+	public Subscriber(String name, int age,Ride ride) {
+		super(ride);
+		this.name = name;
+		this.age = age;
+	}
+	
+	public Subscriber(String name, int age,ArrayList<Ride> rides) {
+		super(rides);
 		this.name = name;
 		this.age = age;
 	}

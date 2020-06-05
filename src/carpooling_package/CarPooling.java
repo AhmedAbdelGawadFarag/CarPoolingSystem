@@ -34,13 +34,24 @@ class Car {
 	final String Codenumber, driverName;
 	final int capacity;
 	int TripsPerDay;
+	ArrayList<Passenger> passengers;
 
 	public Car(String Codenumber, int capicaty, String driverName, int capacity, int TripsPerDay) {
 		this.Codenumber = Codenumber;
 		this.capacity = capacity;
 		this.driverName = driverName;
 		this.TripsPerDay = TripsPerDay;
+		passengers = new ArrayList<Passenger>();
 	}
+
+	public boolean canReverse() {
+		return (this.passengers.size() <= capacity);
+	}
+
+	public void addPassenger(Passenger passenger) {
+		this.passengers.add(passenger);
+	}
+
 }
 
 class Ticket {
@@ -60,7 +71,7 @@ class Ride {
 	private Route route;
 	private Car car;
 	private Ticket ticket;
-
+	private int test;
 	public Ride(Route route, Car car, Ticket ticket) {
 		this.route = route;
 		this.car = car;

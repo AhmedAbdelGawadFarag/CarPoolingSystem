@@ -307,22 +307,12 @@ abstract class Passenger {
 	protected ArrayList<Ride> rides;
 
 	/**
-	 * initialize passenger with ride
+	 * initialize passenger object with empty array of rides that can buy
 	 * 
-	 * @param ride of the
+	 * 
 	 */
-	public Passenger(Ride ride) {
+	public Passenger() {
 		rides = new ArrayList<Ride>();
-		rides.add(ride);
-	}
-
-	/**
-	 * initialize passenger object
-	 * 
-	 * @param rides array list of all rides that passengar will make
-	 */
-	public Passenger(ArrayList<Ride> rides) {
-		this.rides = rides;
 	}
 
 	/**
@@ -344,18 +334,28 @@ abstract class Passenger {
  */
 interface Iprice {
 	/**
-	 * 
-	 * @param ride ride object
-	 * @return ticket price for ride object
+	 * @return ticket discount for the classes that implement that interface
 	 */
-	double TicketPrice(Ride ride);
+	public double discount();
+}
 
-	/**
-	 * 
-	 * @param ticket ticket object
-	 * @return ticket price if you take ticket object
-	 */
-	double TicketPrice(Ticket ticket);
+/**
+ * class that is responsible for calculating the discount for passengers
+ * depending on their types this class calculate the discount manually by just
+ * taking an object form Iprice interface
+ * 
+ * @author Beeka
+ *
+ */
+class Discount {
+
+	private Discount() {
+
+	}
+
+	public double getDiscount(Ticket T, Iprice passenger) {
+		return (T.getPrice() - passenger.discount() * T.getPrice());
+	}
 
 }
 
@@ -379,27 +379,32 @@ interface Isubscribable {
 	public boolean cansubscribe(int age, int Trips);
 }
 
+/**
+ * non subscriber passenger class
+ * 
+ * @author Beeka
+ *
+ */
 class NonSubscriber extends Passenger implements Iprice, Isubscribable {
-
-	public NonSubscriber(Ride ride) {
-		super(ride);
+	/**
+	 * initialize non subscriber object with empty array of rides that can buy
+	 */
+	public NonSubscriber() {
+		super();
 	}
 
-	public NonSubscriber(ArrayList<Ride> rides) {
-		super(rides);
-	}
-
+	/**
+	 * discount for the non subscriber passenger class
+	 */
 	@Override
-	public double TicketPrice(Ticket ticket) {
-		return ticket.getPrice();
+	public double discount() {
+		// there is no discount for the nonsubscriber class so the discount will be 0
+		return 0;
 	}
 
-	@Override
-	public double TicketPrice(Ride ride) {
-		Ticket t = ride.getTicket();
-		return this.TicketPrice(t);
-	}
-
+	/**
+	 * check if this passenger can subscribe or not
+	 */
 	@Override
 	public boolean cansubscribe(int age, int Trips) {
 		if (this.age >= age && this.trips >= Trips) {
@@ -410,32 +415,34 @@ class NonSubscriber extends Passenger implements Iprice, Isubscribable {
 
 }
 
+/**
+ * subscriber passenger class
+ * 
+ * @author Beeka
+ */
 class Subscriber extends Passenger implements Iprice {
 	int reservedTrips;
 	public final String name;
 	public int age;
 
-	public Subscriber(String name, int age,Ride ride) {
-		super(ride);
-		this.name = name;
-		this.age = age;
-	}
-	
-	public Subscriber(String name, int age,ArrayList<Ride> rides) {
-		super(rides);
+	/**
+	 * initialize subscriber object that has name and age with empty array of rides
+	 * that can buy
+	 * 
+	 * @param name name of the passenger
+	 * @param age  age of the passenger
+	 */
+	public Subscriber(String name, int age) {
 		this.name = name;
 		this.age = age;
 	}
 
+	/**
+	 * get ticket discount for the subscriber passenger
+	 */
 	@Override
-	public double TicketPrice(Ticket ticket) {
-		return ((ticket.getPrice() * 50.0) / 100);
-	}
-
-	@Override
-	public double TicketPrice(Ride ride) {
-		Ticket t = ride.getTicket();
-		return this.TicketPrice(t);
+	public double discount() {
+		return ((double) 50.0) / 100;
 	}
 
 }
@@ -443,9 +450,6 @@ class Subscriber extends Passenger implements Iprice {
 public class CarPooling {
 
 	public static void main(String[] args) {
-
-		System.out.println("hello world");
-		System.out.println("hello world");
 
 	}
 

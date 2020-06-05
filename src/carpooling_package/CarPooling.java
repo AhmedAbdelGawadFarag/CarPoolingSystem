@@ -30,7 +30,11 @@ class Route {
 
 }
 
-class Car {
+interface Icode {
+	public String getCarCode();
+}
+
+class Car implements Icode {
 	final String Codenumber, driverName;
 	final int capacity;
 	int TripsPerDay;
@@ -51,11 +55,17 @@ class Car {
 	public void addPassenger(Passenger passenger) {
 		this.passengers.add(passenger);
 	}
+	
+	@Override
+	public String getCarCode() {
+		return Codenumber;
+	}
 
 }
 
 class Ticket {
 	private double price;
+	private Icode carCode;// interface refrence
 
 	public Ticket(double price) {
 		this.price = price;
@@ -71,7 +81,7 @@ class Ride {
 	private Route route;
 	private Car car;
 	private Ticket ticket;
-	private int test;
+
 	public Ride(Route route, Car car, Ticket ticket) {
 		this.route = route;
 		this.car = car;
@@ -112,11 +122,6 @@ abstract class Passenger {
 		rides = new ArrayList<Ride>();
 	}
 
-	public Passenger(Ride ride) {
-		this();
-		rides.add(ride);
-	}
-
 	protected void addride(Ride ride) {
 		rides.add(ride);
 	}
@@ -131,14 +136,17 @@ interface Iprice {
 
 }
 
-class NonSubscriber extends Passenger implements Iprice {
+interface Isubscribable {
+	int age = 35; // minimum age to subscibe;
+	int trips = 10; // minmum trips you can subsribe to
+
+	public boolean cansubscribe(int age, int Trips);
+}
+
+class NonSubscriber extends Passenger implements Iprice, Isubscribable {
 
 	public NonSubscriber() {
 		super();
-	}
-
-	public NonSubscriber(Ride ride) {
-		super(ride);
 	}
 
 	@Override
@@ -152,17 +160,25 @@ class NonSubscriber extends Passenger implements Iprice {
 		return this.TicketPrice(t);
 	}
 
+	@Override
+	public boolean cansubscribe(int age, int Trips) {
+		if (this.age >= age && this.trips >= Trips) {
+			return true;
+		}
+		return false;
+	}
+
 }
 
 class Subscriber extends Passenger implements Iprice {
 	int reservedTrips;
+	public final String name;
+	public int age;
 
-	public Subscriber() {
+	public Subscriber(String name, int age) {
 		super();
-	}
-
-	public Subscriber(Ride ride) {
-		super(ride);
+		this.name = name;
+		this.age = age;
 	}
 
 	@Override

@@ -1,30 +1,31 @@
 package carpooling_package;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
-class route {
-	private String startDest;
-	private String EndDest;
+class Route {
+	private String startLocation;
+	private String endLocation;
 
-	public route(String Start, String End) {
-		this.startDest = Start;
-		this.EndDest = End;
+	public Route(String Start, String End) {
+		this.startLocation = Start;
+		this.endLocation = End;
 	}
 
-	public void setStartDest(String startDest) {
-		this.startDest = startDest;
+	public void setStartDest(String startLocation) {
+		this.startLocation = startLocation;
 	}
 
-	public void setEndDest(String endDest) {
-		EndDest = endDest;
+	public void setEndDest(String endLocation) {
+		this.endLocation = endLocation;
 	}
 
 	public String getStartDest() {
-		return startDest;
+		return this.startLocation;
 	}
 
 	public String getEndDest() {
-		return EndDest;
+		return this.endLocation;
 	}
 
 }
@@ -42,45 +43,129 @@ class Car {
 	}
 }
 
-class Ride {
-	route carRoute;
-	Car car;
-
-}	
-
 class Ticket {
 	private double price;
 
 	public Ticket(double price) {
+		this.price = price;
+	}
 
+	public double getPrice() {
+		return price;
 	}
 
 }
 
-abstract class passenger {
-	Ticket t;
-	Ride ride;
-	public passenger() {
-		// TODO Auto-generated constructor stub
+class Ride {
+	private Route route;
+	private Car car;
+	private Ticket ticket;
+
+	public Ride(Route route, Car car, Ticket ticket) {
+		this.route = route;
+		this.car = car;
+		this.ticket = ticket;
+	}
+
+	public void setCar(Car car) {
+		this.car = car;
+	}
+
+	public void setCarRoute(Route route) {
+		this.route = route;
+	}
+
+	public void setTicket(Ticket ticket) {
+		this.ticket = ticket;
+	}
+
+	public Car getCar() {
+		return car;
+	}
+
+	public Route getRoute() {
+		return route;
+	}
+
+	public Ticket getTicket() {
+		return ticket;
 	}
 
 }
 
-interface iprice{
-	
-	
+abstract class Passenger {
+
+	protected ArrayList<Ride> rides;
+
+	public Passenger() {
+		rides = new ArrayList<Ride>();
+	}
+
+	public Passenger(Ride ride) {
+		this();
+		rides.add(ride);
+	}
+
+	protected void addride(Ride ride) {
+		rides.add(ride);
+	}
+
 }
 
-class nonSubscriber extends passenger implements iprice{
-	
-	
+interface Iprice {
+
+	double TicketPrice(Ride ride);
+
+	double TicketPrice(Ticket ticket);
+
 }
 
-class subscriber extends passenger implements iprice{
-	
-	
+class NonSubscriber extends Passenger implements Iprice {
+
+	public NonSubscriber() {
+		super();
+	}
+
+	public NonSubscriber(Ride ride) {
+		super(ride);
+	}
+
+	@Override
+	public double TicketPrice(Ticket ticket) {
+		return ticket.getPrice();
+	}
+
+	@Override
+	public double TicketPrice(Ride ride) {
+		Ticket t = ride.getTicket();
+		return this.TicketPrice(t);
+	}
+
 }
 
+class Subscriber extends Passenger implements Iprice {
+	int reservedTrips;
+
+	public Subscriber() {
+		super();
+	}
+
+	public Subscriber(Ride ride) {
+		super(ride);
+	}
+
+	@Override
+	public double TicketPrice(Ticket ticket) {
+		return ((ticket.getPrice() * 50.0) / 100);
+	}
+
+	@Override
+	public double TicketPrice(Ride ride) {
+		Ticket t = ride.getTicket();
+		return this.TicketPrice(t);
+	}
+
+}
 
 public class CarPooling {
 

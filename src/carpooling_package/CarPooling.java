@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 /**
  * route that has a start Location and end Location
- * 
  * @author Beeka
  */
 class Route {

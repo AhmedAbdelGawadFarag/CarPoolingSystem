@@ -359,7 +359,7 @@ abstract class Discount {
 	 * @param passenger object of the type of passenger
 	 * @return discount of the ride
 	 */
-	
+
 	public static double getDiscount(Ride r, Passenger passenger) {
 		Ticket t = r.getTicket();
 		return Discount.getDiscount(t, passenger);
@@ -372,7 +372,6 @@ abstract class Discount {
  * interface that are resposible for detremining if you can subscribe or not
  * 
  * @author Beeka
- *
  */
 interface Isubscribable {
 	int age = 35; // minimum age to subscibe;

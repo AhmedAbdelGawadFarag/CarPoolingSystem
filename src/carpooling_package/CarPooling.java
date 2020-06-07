@@ -58,28 +58,12 @@ class Route {
 }
 
 /**
- * the reason for this interface that i want the ticket class to take the
- * carcode but i dont want to send the whole car class i just want to send the
- * car code only not the driver name and all other stuff that ticket doesnt need
- * so this interface make this
- * 
- * @author Beeka
- *
- */
-interface Icode {
-	/**
-	 * @return Car code number
-	 */
-	public String getCarCode();
-}
-
-/**
  * car that has codenumber , drivername ,capacity ,trips in each day ,
  * passengers
  * 
  * @author Beeka
  */
-class Car implements Icode {
+class Car {
 	private final String Codenumber;
 	private final String driverName;
 	private final int capacity;
@@ -104,7 +88,7 @@ class Car implements Icode {
 	 * 
 	 * @return return car code number
 	 */
-	@Override
+
 	public String getCarCode() {
 		return Codenumber;
 	}
@@ -129,24 +113,27 @@ class Car implements Icode {
 }
 
 /**
- * Ticket that has a price and carCode
+ * Ticket that has a price and Ride
  * 
  * @author Beeka
  *
  */
 class Ticket {
 	private double price;
-	private final Icode carCode;// interface refrence
+	private final Ride ride;// ride refrence
+	private final String carcode;
 
 	/**
-	 * intalize ticket with price , car code
 	 * 
-	 * @param price   ticket price
-	 * @param carCode car code
+	 * intalize ticket with price , Ride refrence
+	 * 
+	 * @param price ticket price
+	 * @param ride  car code
 	 */
-	public Ticket(double price, Icode carCode) {
+	public Ticket(double price, Ride ride) {
 		this.price = price;
-		this.carCode = carCode;
+		this.ride = ride;
+		carcode = ride.getCar().getCarCode();
 	}
 
 	/**
@@ -162,7 +149,7 @@ class Ticket {
 	 * @return car code
 	 */
 	public String CarCode() {
-		return this.carCode.getCarCode();
+		return this.carcode;
 	}
 
 	/**
@@ -216,7 +203,7 @@ class Ride {
 
 	public void addPassenger(Passenger p) {
 		double ticketPrice = Discount.getDiscount(this, p);
-		Ticket newTicket = new Ticket(ticketPrice, this.car);
+		Ticket newTicket = new Ticket(ticketPrice, this);
 		p.addTicket(newTicket);// add last ticket from the avail tickets
 
 		passngers.add(p);
@@ -247,6 +234,27 @@ class Ride {
 
 	public double getPrice() {
 		return price;
+	}
+
+	public void printData() {
+
+		System.out.printf("Ride-: start location : %s end location: %s CarCode %s \n", route.getStartLocation(),
+				route.getEndLocation(), car.getCarCode());
+		System.out.println(" Passengers in this ride : ");
+
+		for (int i = 0; i < passngers.size(); i++) {
+			Passenger p = passngers.get(i);
+
+			System.out.print("Type: ");
+			if (p instanceof Subscriber) {
+				System.out.print("Subscriber");
+			} else {
+				System.out.print("non Subscriber");
+			}
+			System.out.printf("ride Price :%f Ticket Price(after discount):%f \n", this.price,
+					Discount.getDiscount(this, p));
+
+		}
 	}
 }
 
@@ -424,10 +432,11 @@ public class CarPooling {
 
 	}
 
-	public static void searchForroute(Route r) {
+	public static ArrayList<Ride> GetAvailRides(Route r) {
+		ArrayList<Ride> availrides = new ArrayList<Ride>();
+
 		String start = r.getStartLocation();
 		String end = r.getEndLocation();
-
 		System.out.printf("Result for Start:%s End:%s\n\n", start, end);
 
 		int cnt = 1;
@@ -437,16 +446,21 @@ public class CarPooling {
 			String EndRide = rides.get(i).getRoute().getEndLocation();
 
 			if (start.equalsIgnoreCase(StartRide) && end.equalsIgnoreCase(EndRide)) {
+
 				System.out.print(cnt + " :");
 				printOndeRide(rides.get(i));
 
+				availrides.add(rides.get(i));
 				cnt++;
+
 			}
 
 		}
+		return availrides;
+
 	}
 
-	public static String checkSubscrbtion(ArrayList<Passenger> passengers) {
+	public static Subscriber checkSubscrbtion(ArrayList<Passenger> passengers) {
 		System.out.println("enter your name please to check your subscribtion");
 		String name = input.next();
 
@@ -455,14 +469,14 @@ public class CarPooling {
 
 			if (p instanceof Subscriber) {
 
-				Subscriber s = (Subscriber)p;
+				Subscriber s = (Subscriber) p;
 				if (s.name.equalsIgnoreCase(name)) {
-					return "y";
+					return s;
 				}
 			}
 
 		}
-		return "n";
+		return null;
 
 	}
 
@@ -505,32 +519,40 @@ public class CarPooling {
 
 		rides.add(new Ride(routes.get(1), cars.get(3), 110));
 		rides.add(new Ride(routes.get(3), cars.get(2), 60));
+		while (true) {
+			System.out.println("enter (1 or 2 or 3) to choose ");
+			System.out.println("1- reserve");
+			System.out.println("2- display all rides data");
+			System.out.println("2- addroute");
+			System.out.println("3- addcar (addcar to existing route)");
+			input = new Scanner(System.in);
 
-		System.out.println("enter (1 or 2 or 3) to choose ");
-		System.out.println("1- reserve");
-		System.out.println("2- addroute");
-		System.out.println("3- addcar (addcar to existing route)");
-		input = new Scanner(System.in);
+			int choice = input.nextInt();
+			if (choice == 1) {
 
-		String choice = input.next();
-		if (choice.equalsIgnoreCase("1")) {
-			System.out.println("do you have a subscription ? (y/n)");
-			String subscritption = input.next();
-			Passenger newpassenger;
-			if (subscritption.equalsIgnoreCase("y")) {
-				System.out.print(checkSubscrbtion(passengers));
+				System.out.println("do you have a subscription ? (y/n)");
+				String subscritption = input.next();
+				Passenger newpassenger = null;
 
-			} else if (subscritption.equalsIgnoreCase("n")) {
-				System.out.println("do you want to subscribe ? (y/n)");
+				if (subscritption.equalsIgnoreCase("y")) {
+					newpassenger = checkSubscrbtion(passengers);
+
+				} else if (subscritption.equalsIgnoreCase("n")) {
+					System.out.println("do you want to subscribe ? (y/n)");
+
+				}
+
+				getallroute(routes);
+				System.out.print("Enter route number : \n");
+				String routeNumber = input.next();
+
+				ArrayList<Ride> AvailRides = GetAvailRides(routes.get(Integer.parseInt(routeNumber) - 1));
+				System.out.print("Enter ride number : ");
+				int ridenumber = input.nextInt();
+				AvailRides.get(ridenumber - 1).addPassenger(newpassenger);
 
 			}
 
-			getallroute(routes);
-			System.out.print("Enter route number : ");
-			String routeNumber = input.next();
-			searchForroute(routes.get(Integer.parseInt(routeNumber) - 1));
-
 		}
-
 	}
 }

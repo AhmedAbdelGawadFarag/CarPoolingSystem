@@ -191,7 +191,7 @@ class Ride {
 	private Car car;
 	private int availTickets;// the availabe tickets for the ride
 	private ArrayList<Passenger> passngers;// array list of passengers
-	private int price;// price of ride not the ticket
+	private double price;// price of ride not the ticket
 
 	/**
 	 * initialize a ride with route , car , price of the ride (note that price of
@@ -204,7 +204,7 @@ class Ride {
 	 * @param car   car of the ride
 	 * @param price price of the ride
 	 */
-	public Ride(Route route, Car car, int price) {
+	public Ride(Route route, Car car, double price) {
 		this.route = route;
 		this.car = car;
 		this.price = price;
@@ -245,7 +245,7 @@ class Ride {
 		return availTickets;
 	}
 
-	public int getPrice() {
+	public double getPrice() {
 		return price;
 	}
 }
@@ -405,6 +405,7 @@ public class CarPooling {
 	static ArrayList<Route> routes;
 	static ArrayList<Car> cars;
 	static ArrayList<Ride> rides;
+	static Scanner input;
 
 	public static void getallroute(ArrayList<Route> routes) {
 		System.out.println("choose the route you want to reverse a car in it ");
@@ -416,10 +417,53 @@ public class CarPooling {
 
 	}
 
+	public static void printOndeRide(Ride ride) {
+		String StartLocation = ride.getRoute().getStartLocation();
+		String EndLocation = ride.getRoute().getEndLocation();
+		System.out.printf("carcode:%s price:%f\n", ride.getCar().getCarCode(), ride.getPrice());
+
+	}
+
 	public static void searchForroute(Route r) {
+		String start = r.getStartLocation();
+		String end = r.getEndLocation();
+
+		System.out.printf("Result for Start:%s End:%s\n\n", start, end);
+
+		int cnt = 1;
 		for (int i = 0; i < rides.size(); i++) {
-			System.out.print(rides.get(i).getRoute() == r);
+
+			String StartRide = rides.get(i).getRoute().getStartLocation();
+			String EndRide = rides.get(i).getRoute().getEndLocation();
+
+			if (start.equalsIgnoreCase(StartRide) && end.equalsIgnoreCase(EndRide)) {
+				System.out.print(cnt + " :");
+				printOndeRide(rides.get(i));
+
+				cnt++;
+			}
+
 		}
+	}
+
+	public static String checkSubscrbtion(ArrayList<Passenger> passengers) {
+		System.out.println("enter your name please to check your subscribtion");
+		String name = input.next();
+
+		for (int i = 0; i < passengers.size(); i++) {
+			Passenger p = passengers.get(i);
+
+			if (p instanceof Subscriber) {
+
+				Subscriber s = (Subscriber)p;
+				if (s.name.equalsIgnoreCase(name)) {
+					return "y";
+				}
+			}
+
+		}
+		return "n";
+
 	}
 
 	public static void main(String[] args) {
@@ -446,20 +490,47 @@ public class CarPooling {
 		cars.add(new Car("2010354987", "ibrahim", 5, 2));
 
 		rides = new ArrayList<Ride>();
+
 		rides.add(new Ride(routes.get(0), cars.get(0), 125));
+		rides.get(0).addPassenger(passengers.get(0));
+		rides.get(0).addPassenger(passengers.get(3));
+
 		rides.add(new Ride(routes.get(1), cars.get(0), 75));
+		rides.get(1).addPassenger(passengers.get(1));
+		rides.get(1).addPassenger(passengers.get(4));
+
 		rides.add(new Ride(routes.get(0), cars.get(1), 100));
+		rides.get(2).addPassenger(passengers.get(2));
+		rides.get(2).addPassenger(passengers.get(4));
+
 		rides.add(new Ride(routes.get(1), cars.get(3), 110));
 		rides.add(new Ride(routes.get(3), cars.get(2), 60));
 
-		getallroute(routes);
+		System.out.println("enter (1 or 2 or 3) to choose ");
+		System.out.println("1- reserve");
+		System.out.println("2- addroute");
+		System.out.println("3- addcar (addcar to existing route)");
+		input = new Scanner(System.in);
 
-		Scanner input = new Scanner(System.in);
+		String choice = input.next();
+		if (choice.equalsIgnoreCase("1")) {
+			System.out.println("do you have a subscription ? (y/n)");
+			String subscritption = input.next();
+			Passenger newpassenger;
+			if (subscritption.equalsIgnoreCase("y")) {
+				System.out.print(checkSubscrbtion(passengers));
 
-		System.out.print("Enter route number : ");
-		String routeNumber = input.next();
+			} else if (subscritption.equalsIgnoreCase("n")) {
+				System.out.println("do you want to subscribe ? (y/n)");
 
-		searchForroute(routes.get(Integer.parseInt(routeNumber)));
+			}
+
+			getallroute(routes);
+			System.out.print("Enter route number : ");
+			String routeNumber = input.next();
+			searchForroute(routes.get(Integer.parseInt(routeNumber) - 1));
+
+		}
 
 	}
 }

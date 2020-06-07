@@ -84,7 +84,6 @@ class Car implements Icode {
 	private final String driverName;
 	private final int capacity;
 	private int TripsPerDay;
-	private ArrayList<Passenger> passengers;
 
 	/**
 	 * initialize car object with code number , drivername , capacity , trips in day
@@ -99,40 +98,6 @@ class Car implements Icode {
 		this.capacity = capacity;
 		this.driverName = driverName;
 		this.TripsPerDay = TripsPerDay;
-		passengers = new ArrayList<Passenger>();
-	}
-
-	/**
-	 * initialize car object with code number , drivername , capacity , trips in day
-	 * 
-	 * @param Codenumber  Codenumber car code number
-	 * @param driverName  driver name
-	 * @param capacity    capacity of the car
-	 * @param TripsPerDay number of trips in a day
-	 * @param passengers  passengers that will be in the car
-	 */
-	public Car(String Codenumber, String driverName, int capacity, int TripsPerDay, ArrayList<Passenger> passengers) {
-		this(Codenumber, driverName, capacity, TripsPerDay);
-		this.passengers = passengers;
-
-	}
-
-	/**
-	 * 
-	 * @return true if there is a place in the car to be reversed , false otherwise
-	 */
-	public boolean canReverse() {
-		return (this.passengers.size() <= capacity);
-	}
-
-	/**
-	 * add a passenger to the car
-	 * 
-	 * @param passenger passenger object
-	 */
-
-	public void addPassenger(Passenger passenger) {
-		this.passengers.add(passenger);
 	}
 
 	/**
@@ -155,11 +120,10 @@ class Car implements Icode {
 
 	/**
 	 * 
-	 * @return passengers of the car
+	 * @return capacity of the car
 	 */
-
-	public ArrayList<Passenger> getPassengers() {
-		return passengers;
+	public int getCapacity() {
+		return capacity;
 	}
 
 }
@@ -213,8 +177,9 @@ class Ticket {
 }
 
 /**
- * ride class is the class that holds the data for each passenger as each
- * passenger take a trip must have a rout and a car and ticket for the trip
+ * a ride is just what customers pay for to use carpooling system any trip must
+ * have a rout and a car and available tickets that passengers can reserve it
+ * and passengers for the trip
  * 
  * @author Beeka
  *
@@ -222,46 +187,37 @@ class Ticket {
 class Ride {
 	private Route route;
 	private Car car;
-	private Ticket ticket;
+	private ArrayList<Ticket> availTickets;// the availabe tickets for the ride
+	private ArrayList<Passenger> passngers;// array list of passengers
+	private int price;// price of ride not the ticket
 
 	/**
-	 * initialize a ride with route , car , ticket objects
-	 * 
-	 * @param route  route of the ride
-	 * @param car    car of the ride
-	 * @param ticket ticket of the ride
-	 */
-	public Ride(Route route, Car car, Ticket ticket) {
-		this.route = route;
-		this.car = car;
-		this.ticket = ticket;
-	}
-
-	/**
-	 * set car of the ride
-	 * 
-	 * @param car car of the ride
-	 */
-	public void setCar(Car car) {
-		this.car = car;
-	}
-
-	/**
-	 * set ride route
+	 * initialize a ride with route , car , price of the ride (note that price of
+	 * the ride is different between ticket price as ticket price can be less than
+	 * ride price due to subscription or it can equall ride price if passenger
+	 * doesnt have subscription) , available tickets is just calculated from the car
+	 * object capacity
 	 * 
 	 * @param route route of the ride
+	 * @param car   car of the ride
+	 * @param price price of the ride
 	 */
-	public void setCarRoute(Route route) {
+	public Ride(Route route, Car car, int price) {
 		this.route = route;
+		this.car = car;
+		this.price = price;
+		availTickets = new ArrayList<Ticket>(car.getCapacity());
+		passngers = new ArrayList<Passenger>();
 	}
 
-	/**
-	 * set ride ticket
-	 * 
-	 * @param ticket ticket of the ride
-	 */
-	public void setTicket(Ticket ticket) {
-		this.ticket = ticket;
+	public void addPassenger(Passenger p) {
+		double ticketPrice = Discount.getDiscount(this, p);
+		Ticket newTicket = new Ticket(ticketPrice, this.car);
+		p.addTicket(newTicket);// add last ticket from the avail tickets
+
+		passngers.add(p);
+
+		availTickets.remove(availTickets.size() - 1);// remove ticket from avail tickets object
 	}
 
 	/**
@@ -279,29 +235,32 @@ class Ride {
 	}
 
 	/**
-	 * @return ticket object
+	 * @return the Avail places in this ride
 	 */
-	public Ticket getTicket() {
-		return ticket;
+	public int getAvailTickets() {
+		return availTickets.size();
 	}
 
+	public int getPrice() {
+		return price;
+	}
 }
 
 /**
- * abstract class that represents passenger , each passenger must have one ride
- * or multiple rides
+ * abstract class that represents passenger , each passenger can have one ticket
+ * or multiple tickets
  * 
  * @author Beeka
  */
 abstract class Passenger {
 
-	protected ArrayList<Ride> rides;
+	protected ArrayList<Ticket> tickets;
 
 	/**
-	 * initialize passenger object with empty array of rides that can buy
+	 * initialize passenger object with empty array of tickets
 	 */
 	public Passenger() {
-		rides = new ArrayList<Ride>();
+		tickets = new ArrayList<Ticket>();
 	}
 
 	/**
@@ -310,12 +269,12 @@ abstract class Passenger {
 	abstract public double discount();
 
 	/**
-	 * add a ride to this passenger
+	 * add a ticket to this passenger
 	 * 
-	 * @param ride ride of the passenger
+	 * @param ticket ticket of the passenger
 	 */
-	protected void addride(Ride ride) {
-		rides.add(ride);
+	protected void addTicket(Ticket ticket) {
+		tickets.add(ticket);
 	}
 
 }
@@ -346,26 +305,9 @@ abstract class Discount {
 	 * @param passenger object of the type of passenger
 	 * @return discount of the ticket
 	 */
-	public static double getDiscount(Ticket T, Passenger passenger) {
-		return (T.getPrice() - passenger.discount() * T.getPrice());
-	}
-
-	/**
-	 * function to getDiscount by taking object of the passenger to know its type
-	 * automatically by calling discount in each passenger class if he subscribe or
-	 * he didn't subscribe then takes the ride
-	 * 
-	 * @param T         ticket object
-	 * @param passenger object of the type of passenger
-	 * @return discount of the ride
-	 */
-
 	public static double getDiscount(Ride r, Passenger passenger) {
-		Ticket t = r.getTicket();
-		return Discount.getDiscount(t, passenger);
-
+		return (r.getPrice() - passenger.discount() * r.getPrice());
 	}
-
 }
 
 /**
@@ -454,16 +396,22 @@ class Subscriber extends Passenger {
 
 }
 
+class hardcoded {
+	public hardcoded() {
+
+	}
+
+}
+
 public class CarPooling {
 
 	public static void main(String[] args) {
-		Car m = new Car("123", "ahmed", 5, 10);
-		Ticket t = new Ticket(100, m);
-		Passenger p = new Subscriber("ad", 13);
-		Route f = new Route("as", "DS");
-		Ride r = new Ride(f, m, t);
-		double a = Discount.getDiscount(r, p);
-		System.out.print(a);
-	}
+		Route r = new Route("city", "ASd");
+		Car c = new Car("12", "asd", 2, 10);
 
+		Ride m = new Ride(r, c, 13);
+		Passenger p = new Subscriber("ASd", 12);
+		m.addPassenger(p);
+		System.out.println(p.tickets.get(0).getPrice());
+	}
 }

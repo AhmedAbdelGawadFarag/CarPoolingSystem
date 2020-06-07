@@ -3,6 +3,7 @@ package carpooling_package;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 /**
  * route that has a start Location and end Location
  * 
@@ -507,7 +508,9 @@ public class CarPooling {
 
 	public static void addnewSbuscriber() {
 		NonSubscriber temp = new NonSubscriber();
-		while (true) {
+		char choice = 'y';
+
+		while (choice == 'y') {
 			System.out.printf("minimum number of age and trips to subscribe age=%d  trips=%d \n", temp.miniage,
 					temp.minitrips);
 			System.out.println("type your name please");
@@ -520,10 +523,12 @@ public class CarPooling {
 
 			if (temp.cansubscribe(age, numoftrips) == true) {
 				Subscriber newSubscriber = new Subscriber(name, age);
+				passengers.add(newSubscriber);
 				return;
 			} else {
 				System.out.println("you cant subscribe (age or trips is less than the minimum) ");
-				
+				System.out.println("press y to try again or c to cancel");
+				choice = input.next().charAt(0);
 			}
 		}
 	}
@@ -566,7 +571,7 @@ public class CarPooling {
 		rides.get(2).addPassenger(passengers.get(4));
 
 		rides.add(new Ride(routes.get(4), cars.get(3), 35));
-		
+
 		while (true) {
 			System.out.println("enter (1 or 2 or 3) to choose ");
 			System.out.println("1- reserve");
@@ -590,7 +595,7 @@ public class CarPooling {
 						else
 							break;
 					} else if (subscritption.equalsIgnoreCase("n")) {
-					
+
 						newpassenger = new NonSubscriber();
 						break;
 					}
@@ -603,10 +608,13 @@ public class CarPooling {
 				System.out.print("Enter ride number : ");
 				int ridenumber = input.nextInt();
 				AvailRides.get(ridenumber - 1).addPassenger(newpassenger);
-				passengers.add(newpassenger);
+				if (newpassenger instanceof NonSubscriber)
+					passengers.add(newpassenger);
 
 			} else if (choice == 4) {
 				displayPassengersData();
+			} else if (choice == 2) {
+				addnewSbuscriber();
 			}
 
 		}

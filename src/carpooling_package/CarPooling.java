@@ -179,9 +179,9 @@ class Ticket {
 /**
  * a ride is just what customers pay for to use carpooling system any trip must
  * have a rout and a car and available tickets that passengers can reserve it
- * and passengers and a price of course ( the ride price is different between ticket
- * price as ticket price can be less than ride price due to subscription or it
- * can equall ride price if passenger doesnt have subscription)
+ * and passengers and a price of course ( the ride price is different between
+ * ticket price as ticket price can be less than ride price due to subscription
+ * or it can equall ride price if passenger doesnt have subscription)
  * 
  * @author Beeka
  *
@@ -208,9 +208,9 @@ class Ride {
 		this.route = route;
 		this.car = car;
 		this.price = price;
-		
+
 		availTickets = car.getCapacity();
-		
+
 		passngers = new ArrayList<Passenger>();
 	}
 
@@ -320,8 +320,8 @@ abstract class Discount {
  * @author Beeka
  */
 interface Isubscribable {
-	int age = 35; // minimum age to subscibe;
-	int trips = 10; // minmum trips you can subsribe to
+	int age = 20; // minimum age to subscibe;
+	int trips = 5; // minmum trips you can subsribe to
 
 	/**
 	 * check if the passenger can subscribe or not
@@ -400,16 +400,66 @@ class Subscriber extends Passenger {
 
 }
 
-class hardcoded {
-	public hardcoded() {
+public class CarPooling {
+	static ArrayList<Passenger> passengers;
+	static ArrayList<Route> routes;
+	static ArrayList<Car> cars;
+	static ArrayList<Ride> rides;
+
+	public static void getallroute(ArrayList<Route> routes) {
+		System.out.println("choose the route you want to reverse a car in it ");
+		for (int i = 0; i < 5; i++) {
+			System.out.printf("%d: start location: %s       end location: %s \n", i + 1,
+					routes.get(i).getStartLocation(), routes.get(i).getEndLocation());
+
+		}
 
 	}
 
-}
-
-public class CarPooling {
+	public static void searchForroute(Route r) {
+		for (int i = 0; i < rides.size(); i++) {
+			System.out.print(rides.get(i).getRoute() == r);
+		}
+	}
 
 	public static void main(String[] args) {
-		
+
+		passengers = new ArrayList<Passenger>();
+		passengers.add(new Subscriber("ahmed", 23));
+		passengers.add(new Subscriber("Mohamed", 26));
+		passengers.add(new Subscriber("isaac", 14));
+
+		passengers.add(new NonSubscriber());
+		passengers.add(new NonSubscriber());
+
+		routes = new ArrayList<Route>();
+		routes.add(new Route("nasr city", "shoubra"));
+		routes.add(new Route("abbasia", "october city"));
+		routes.add(new Route("alex", "mansoura"));
+		routes.add(new Route("shoubra", "nasr city"));
+		routes.add(new Route("october city", "abbasia"));
+
+		cars = new ArrayList<Car>();
+		cars.add(new Car("2020198465", "abdelwahab", 4, 2));
+		cars.add(new Car("2014356879", "mahmoud", 5, 2));
+		cars.add(new Car("2013789456", "abanoub", 4, 2));
+		cars.add(new Car("2010354987", "ibrahim", 5, 2));
+
+		rides = new ArrayList<Ride>();
+		rides.add(new Ride(routes.get(0), cars.get(0), 125));
+		rides.add(new Ride(routes.get(1), cars.get(0), 75));
+		rides.add(new Ride(routes.get(0), cars.get(1), 100));
+		rides.add(new Ride(routes.get(1), cars.get(3), 110));
+		rides.add(new Ride(routes.get(3), cars.get(2), 60));
+
+		getallroute(routes);
+
+		Scanner input = new Scanner(System.in);
+
+		System.out.print("Enter route number : ");
+		String routeNumber = input.next();
+
+		searchForroute(routes.get(Integer.parseInt(routeNumber)));
+
 	}
 }

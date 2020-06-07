@@ -161,6 +161,9 @@ class Ticket {
 		this.price = price;
 	}
 
+	public Ride getRide() {
+		return ride;
+	}
 }
 
 /**
@@ -235,27 +238,6 @@ class Ride {
 	public double getPrice() {
 		return price;
 	}
-
-	public void printData() {
-
-		System.out.printf("Ride-: start location : %s end location: %s CarCode %s \n", route.getStartLocation(),
-				route.getEndLocation(), car.getCarCode());
-		System.out.println(" Passengers in this ride : ");
-
-		for (int i = 0; i < passngers.size(); i++) {
-			Passenger p = passngers.get(i);
-
-			System.out.print("Type: ");
-			if (p instanceof Subscriber) {
-				System.out.print("Subscriber");
-			} else {
-				System.out.print("non Subscriber");
-			}
-			System.out.printf("ride Price :%f Ticket Price(after discount):%f \n", this.price,
-					Discount.getDiscount(this, p));
-
-		}
-	}
 }
 
 /**
@@ -288,6 +270,8 @@ abstract class Passenger {
 	protected void addTicket(Ticket ticket) {
 		tickets.add(ticket);
 	}
+
+	abstract public void DisplayData();
 
 }
 
@@ -374,6 +358,21 @@ class NonSubscriber extends Passenger implements Isubscribable {
 		return false;
 	}
 
+	@Override
+	public void DisplayData() {
+		System.out.print("Type:non subscriber \n");
+
+		System.out.print("rides that this passenger took:\n");
+		for (int i = 0; i < this.tickets.size(); i++) {
+			Ticket ticket = tickets.get(i);
+			Ride ride = ticket.getRide();
+			Route route = ride.getRoute();
+			Car car = ride.getCar();
+			System.out.printf("start location : %s end location: %s CarCode %s ", route.getStartLocation(),
+					route.getEndLocation(), car.getCarCode());
+			System.out.printf("ride Price :%f Ticket Price(after discount):%f \n", ride.getPrice(), ticket.getPrice());
+		}
+	}
 }
 
 /**
@@ -405,7 +404,24 @@ class Subscriber extends Passenger {
 	public double discount() {
 		return ((double) 50.0) / 100;
 	}
+	
+	@Override
+	public void DisplayData() {
+		System.out.printf("Type:subscriber name:%s age:%s \n",this.name,this.age);
 
+		System.out.print("rides that this passenger took:\n");
+		for (int i = 0; i < this.tickets.size(); i++) {
+			
+			Ticket ticket = tickets.get(i);
+			Ride ride = ticket.getRide();
+			Route route = ride.getRoute();
+			Car car = ride.getCar();
+			
+			System.out.printf("start location : %s end location: %s CarCode %s ", route.getStartLocation(),
+					route.getEndLocation(), car.getCarCode());
+			System.out.printf("ride Price :%f Ticket Price(after discount):%f \n", ride.getPrice(), ticket.getPrice());
+		}
+	}
 }
 
 public class CarPooling {
@@ -480,6 +496,14 @@ public class CarPooling {
 
 	}
 
+	public static void displayPassengersData() {
+		for (int i = 0; i < passengers.size(); i++) {
+			System.out.printf("passenger:%d\n", i + 1);
+			passengers.get(i).DisplayData();
+			System.out.print("\n\n");
+		}
+	}
+
 	public static void main(String[] args) {
 
 		passengers = new ArrayList<Passenger>();
@@ -514,19 +538,20 @@ public class CarPooling {
 		rides.get(1).addPassenger(passengers.get(4));
 
 		rides.add(new Ride(routes.get(0), cars.get(1), 100));
-		rides.get(2).addPassenger(passengers.get(2));
+		rides.get(2).addPassenger(passengers.get(0));
 		rides.get(2).addPassenger(passengers.get(4));
 
 		rides.add(new Ride(routes.get(1), cars.get(3), 110));
+
 		rides.add(new Ride(routes.get(3), cars.get(2), 60));
 		while (true) {
 			System.out.println("enter (1 or 2 or 3) to choose ");
 			System.out.println("1- reserve");
-			System.out.println("2- display all rides data");
-			System.out.println("2- addroute");
-			System.out.println("3- addcar (addcar to existing route)");
-			input = new Scanner(System.in);
+			System.out.println("2- subscribe");
+			System.out.println("3- unsubscribe");
+			System.out.println("4- Display Data");
 
+			input = new Scanner(System.in);
 			int choice = input.nextInt();
 			if (choice == 1) {
 
@@ -551,6 +576,8 @@ public class CarPooling {
 				int ridenumber = input.nextInt();
 				AvailRides.get(ridenumber - 1).addPassenger(newpassenger);
 
+			} else if (choice == 4) {
+				displayPassengersData();
 			}
 
 		}

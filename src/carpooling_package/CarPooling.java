@@ -404,19 +404,19 @@ class Subscriber extends Passenger {
 	public double discount() {
 		return ((double) 50.0) / 100;
 	}
-	
+
 	@Override
 	public void DisplayData() {
-		System.out.printf("Type:subscriber name:%s age:%s \n",this.name,this.age);
+		System.out.printf("Type:subscriber name:%s age:%s \n", this.name, this.age);
 
 		System.out.print("rides that this passenger took:\n");
 		for (int i = 0; i < this.tickets.size(); i++) {
-			
+
 			Ticket ticket = tickets.get(i);
 			Ride ride = ticket.getRide();
 			Route route = ride.getRoute();
 			Car car = ride.getCar();
-			
+
 			System.out.printf("start location : %s end location: %s CarCode %s ", route.getStartLocation(),
 					route.getEndLocation(), car.getCarCode());
 			System.out.printf("ride Price :%f Ticket Price(after discount):%f \n", ride.getPrice(), ticket.getPrice());
@@ -492,6 +492,7 @@ public class CarPooling {
 			}
 
 		}
+		System.out.println("there is no name with that subscribtion");
 		return null;
 
 	}
@@ -553,20 +554,24 @@ public class CarPooling {
 
 			input = new Scanner(System.in);
 			int choice = input.nextInt();
+			Passenger newpassenger = null;
 			if (choice == 1) {
+				while (true) {
+					System.out.println("do you have a subscription ? (y/n)");
+					String subscritption = input.next();
 
-				System.out.println("do you have a subscription ? (y/n)");
-				String subscritption = input.next();
-				Passenger newpassenger = null;
+					if (subscritption.equalsIgnoreCase("y")) {
 
-				if (subscritption.equalsIgnoreCase("y")) {
-					newpassenger = checkSubscrbtion(passengers);
+						newpassenger = checkSubscrbtion(passengers);
+						if (newpassenger == null)
+							continue;
+						else
+							break;
+					} else if (subscritption.equalsIgnoreCase("n")) {
+						System.out.println("do you want to subscribe ? (y/n)");
 
-				} else if (subscritption.equalsIgnoreCase("n")) {
-					System.out.println("do you want to subscribe ? (y/n)");
-
+					}
 				}
-
 				getallroute(routes);
 				System.out.print("Enter route number : \n");
 				String routeNumber = input.next();

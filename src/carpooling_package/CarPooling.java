@@ -312,8 +312,8 @@ abstract class Discount {
  * @author Beeka
  */
 interface Isubscribable {
-	int age = 20; // minimum age to subscibe;
-	int trips = 5; // minmum trips you can subsribe to
+	int miniage = 20; // minimum age to subscibe;
+	int minitrips = 5; // minmum trips you can subsribe to
 
 	/**
 	 * check if the passenger can subscribe or not
@@ -352,7 +352,7 @@ class NonSubscriber extends Passenger implements Isubscribable {
 	 */
 	@Override
 	public boolean cansubscribe(int age, int Trips) {
-		if (this.age >= age && this.trips >= Trips) {
+		if (this.miniage <= age && this.minitrips <= Trips) {
 			return true;
 		}
 		return false;
@@ -453,7 +453,7 @@ public class CarPooling {
 
 		String start = r.getStartLocation();
 		String end = r.getEndLocation();
-		System.out.printf("Result for Start:%s End:%s\n\n", start, end);
+		System.out.printf("Rides for Start:%s End:%s\n\n", start, end);
 
 		int cnt = 1;
 		for (int i = 0; i < rides.size(); i++) {
@@ -505,6 +505,29 @@ public class CarPooling {
 		}
 	}
 
+	public static void addnewSbuscriber() {
+		NonSubscriber temp = new NonSubscriber();
+		while (true) {
+			System.out.printf("minimum number of age and trips to subscribe age=%d  trips=%d \n", temp.miniage,
+					temp.minitrips);
+			System.out.println("type your name please");
+			String name = input.next();
+			System.out.println("type your age please");
+			int age = input.nextInt();
+			System.out.println("type your number of trips you want to reserve please");
+
+			int numoftrips = input.nextInt();
+
+			if (temp.cansubscribe(age, numoftrips) == true) {
+				Subscriber newSubscriber = new Subscriber(name, age);
+				return;
+			} else {
+				System.out.println("you cant subscribe (age or trips is less than the minimum) ");
+				
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 
 		passengers = new ArrayList<Passenger>();
@@ -542,9 +565,8 @@ public class CarPooling {
 		rides.get(2).addPassenger(passengers.get(0));
 		rides.get(2).addPassenger(passengers.get(4));
 
-		rides.add(new Ride(routes.get(1), cars.get(3), 110));
-
-		rides.add(new Ride(routes.get(3), cars.get(2), 60));
+		rides.add(new Ride(routes.get(4), cars.get(3), 35));
+		
 		while (true) {
 			System.out.println("enter (1 or 2 or 3) to choose ");
 			System.out.println("1- reserve");
@@ -568,8 +590,9 @@ public class CarPooling {
 						else
 							break;
 					} else if (subscritption.equalsIgnoreCase("n")) {
-						System.out.println("do you want to subscribe ? (y/n)");
-
+					
+						newpassenger = new NonSubscriber();
+						break;
 					}
 				}
 				getallroute(routes);
@@ -580,6 +603,7 @@ public class CarPooling {
 				System.out.print("Enter ride number : ");
 				int ridenumber = input.nextInt();
 				AvailRides.get(ridenumber - 1).addPassenger(newpassenger);
+				passengers.add(newpassenger);
 
 			} else if (choice == 4) {
 				displayPassengersData();

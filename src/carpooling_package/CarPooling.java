@@ -179,7 +179,9 @@ class Ticket {
 /**
  * a ride is just what customers pay for to use carpooling system any trip must
  * have a rout and a car and available tickets that passengers can reserve it
- * and passengers for the trip
+ * and passengers and a price of course ( the ride price is different between ticket
+ * price as ticket price can be less than ride price due to subscription or it
+ * can equall ride price if passenger doesnt have subscription)
  * 
  * @author Beeka
  *
@@ -187,7 +189,7 @@ class Ticket {
 class Ride {
 	private Route route;
 	private Car car;
-	private ArrayList<Ticket> availTickets;// the availabe tickets for the ride
+	private int availTickets;// the availabe tickets for the ride
 	private ArrayList<Passenger> passngers;// array list of passengers
 	private int price;// price of ride not the ticket
 
@@ -206,7 +208,9 @@ class Ride {
 		this.route = route;
 		this.car = car;
 		this.price = price;
-		availTickets = new ArrayList<Ticket>(car.getCapacity());
+		
+		availTickets = car.getCapacity();
+		
 		passngers = new ArrayList<Passenger>();
 	}
 
@@ -217,7 +221,7 @@ class Ride {
 
 		passngers.add(p);
 
-		availTickets.remove(availTickets.size() - 1);// remove ticket from avail tickets object
+		availTickets--;// remove ticket from avail tickets object
 	}
 
 	/**
@@ -238,7 +242,7 @@ class Ride {
 	 * @return the Avail places in this ride
 	 */
 	public int getAvailTickets() {
-		return availTickets.size();
+		return availTickets;
 	}
 
 	public int getPrice() {
@@ -406,12 +410,6 @@ class hardcoded {
 public class CarPooling {
 
 	public static void main(String[] args) {
-		Route r = new Route("city", "ASd");
-		Car c = new Car("12", "asd", 2, 10);
-
-		Ride m = new Ride(r, c, 13);
-		Passenger p = new Subscriber("ASd", 12);
-		m.addPassenger(p);
-		System.out.println(p.tickets.get(0).getPrice());
+		
 	}
 }

@@ -844,19 +844,23 @@ public class CarPooling {
 
 				ArrayList<Passenger> SubscribedPassengers = AppRunner.GetSubscibed(passengers);
 
-				System.out.println("choose (1 or 2 or 3 or -------) remove its subscribtion");
 				while (true) {
 					try {
+
+						System.out.println("choose (1 or 2 or 3 or -------) remove its subscribtion");
 
 						String TempRempovdIndex = input.next();
 						TempRempovdIndex = AppRunner.checkInput(TempRempovdIndex, false, true);
 						int removedIndex = Integer.parseInt(TempRempovdIndex);
-						AppRunner.removeSubscibtion(passengers, SubscribedPassengers.get(removedIndex - 1));
+						if (AppRunner.INrange(removedIndex, 0, SubscribedPassengers.size() - 1) == false)
+							throw new NotInRangeException("Exception: not in range you must enter digit within the range \n");
 
+						AppRunner.removeSubscibtion(passengers, SubscribedPassengers.get(removedIndex - 1));
+						break;
 					} catch (WrongInputException e) {
 						System.out.println(e.getMessage());
 
-						System.out.println("type any key to go back or type (y/Y) to try again ");
+						System.out.println("type any key to go back or type (y/Y) to try again \n");
 						String cont = input.next();
 						if (cont.equalsIgnoreCase("y")) {
 							continue;
@@ -864,6 +868,16 @@ public class CarPooling {
 							break;
 						}
 
+					} catch (NotInRangeException e) {
+						System.out.println(e.getMessage());
+
+						System.out.println("type any key to go back or type (y/Y) to try again \n");
+						String cont = input.next();
+						if (cont.equalsIgnoreCase("y")) {
+							continue;
+						} else {
+							break;
+						}
 					}
 				}
 

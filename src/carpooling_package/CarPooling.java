@@ -503,7 +503,7 @@ class AppRunner {
 			}
 
 		}
-		System.out.println("there is no name with that subscribtion");
+		
 		return null;
 
 	}
@@ -592,6 +592,55 @@ class AppRunner {
 		System.out.println("There is no rides for this destination\n\n");
 	}
 
+	public static boolean INrange(int x, int min, int max) {
+		return (x >= min && x <= max);
+	}
+
+	public static Passenger firstchoice(Scanner input, Passenger newpassenger, ArrayList<Passenger> passengers)
+			throws WrongInputException {
+
+		System.out.println("do you have a subscription ? (y/n)");
+		String subscritption = input.next();
+
+		if (subscritption.equalsIgnoreCase("y")) {
+
+			newpassenger = AppRunner.checkSubscrbtion(input, passengers);
+			return newpassenger;
+
+		} else if (subscritption.equalsIgnoreCase("n")) {
+
+			newpassenger = new NonSubscriber();
+			return newpassenger;
+		} else {
+			
+			throw new WrongInputException("exception: wrong input exceptoin \n");
+
+		}
+	}
+}
+
+class NotInRangeException extends Exception {
+
+	public NotInRangeException(String msg) {
+		super(msg);
+	}
+
+}
+
+class WrongInputException extends Exception {
+
+	public WrongInputException(String msg) {
+		super(msg);
+	}
+
+}
+
+class NoPassengerException extends Exception {
+
+	public NoPassengerException(String msg) {
+		super(msg);
+	}
+
 }
 
 public class CarPooling {
@@ -653,41 +702,57 @@ public class CarPooling {
 			int choice = input.nextInt();
 			Passenger newpassenger = null;
 			if (choice == 1) {
-				while (true) {
-					System.out.println("do you have a subscription ? (y/n)");
-					String subscritption = input.next();
+				String cont = "y";
+				while (cont.equalsIgnoreCase("y")) {
 
-					if (subscritption.equalsIgnoreCase("y")) {
-
-						newpassenger = AppRunner.checkSubscrbtion(input, passengers);
+					try {
+						newpassenger = AppRunner.firstchoice(input, newpassenger, passengers);
 						if (newpassenger == null)
-							continue;
-						else
-							break;
-					} else if (subscritption.equalsIgnoreCase("n")) {
-
-						newpassenger = new NonSubscriber();
+							throw new NoPassengerException("Exception: There is no passenger with that name \n");
 						break;
+					} catch (NoPassengerException e) {
+						System.out.println(e.getMessage());
+						System.out.println("press any key to go back or press (y/Y) to try again "); 
+
+						cont = input.next();
+						if (cont.equalsIgnoreCase("y")) {
+							continue;
+						} else {
+							break;
+						}
+
+					} catch (WrongInputException e) {
+						System.out.println(e.getMessage());
+						System.out.println("press any key to go back or press (y/Y) to try again "); 
+						cont = input.next();
+						if (cont.equalsIgnoreCase("y")) {
+							continue;
+						} else {
+							break;
+						}
+
+					}
+
+				}
+				if (cont.equalsIgnoreCase("y")) {
+					AppRunner.getallroute(routes);
+					System.out.print("Enter route number : \n");
+					String routeNumber = input.next();
+
+					ArrayList<Ride> AvailRides = AppRunner.GetAvailRides(rides,
+							routes.get(Integer.parseInt(routeNumber) - 1));
+					System.out.print("Enter ride number : ");
+					int ridenumber = input.nextInt();
+					Ride r = AvailRides.get(ridenumber - 1);
+					if (r.canAdd()) {
+						r.addPassenger(newpassenger);
+						if (newpassenger instanceof NonSubscriber)
+							passengers.add(newpassenger);
+					} else {
+						System.out.println("There is no place in that ride\n");
+						continue;
 					}
 				}
-				AppRunner.getallroute(routes);
-				System.out.print("Enter route number : \n");
-				String routeNumber = input.next();
-
-				ArrayList<Ride> AvailRides = AppRunner.GetAvailRides(rides,
-						routes.get(Integer.parseInt(routeNumber) - 1));
-				System.out.print("Enter ride number : ");
-				int ridenumber = input.nextInt();
-				Ride r = AvailRides.get(ridenumber - 1);
-				if (r.canAdd()) {
-					r.addPassenger(newpassenger);
-					if (newpassenger instanceof NonSubscriber)
-						passengers.add(newpassenger);
-				} else {
-					System.out.println("There is no place in that ride\n");
-					continue;
-				}
-
 			} else if (choice == 4) {
 				AppRunner.displayPassengersData(passengers);
 			} else if (choice == 2) {

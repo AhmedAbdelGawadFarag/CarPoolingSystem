@@ -638,19 +638,19 @@ class AppRunner {
 		return true;
 	}
 
-	public static boolean checkInput(String input, boolean STRING, boolean Integer) throws WrongInputException {
+	public static String checkInput(String input, boolean STRING, boolean Integer) throws WrongInputException {
 
 		if (STRING == false && Integer == true) {
-			if(CheckifInteger(input))
-				return true;
-			else 
-				throw new WrongInputException("Exception: Wrong input \n");
-		} else {
-			if(CheckifInteger(input))
-				return true;
+			if (CheckifInteger(input))
+				return input;
 			else
-				throw new WrongInputException("Exception: Wrong input \n");
-			
+				throw new WrongInputException("Exception: Wrong input please type integer only \n\n");
+		} else {
+			if (CheckifInteger(input))
+				return input;
+			else
+				throw new WrongInputException("Exception: Wrong input please type string only \n\n");
+
 		}
 
 	}
@@ -734,9 +734,24 @@ public class CarPooling {
 			System.out.println("3- unsubscribe");
 			System.out.println("4- Display Data");
 			System.out.println("5- Search for route");
-
 			input = new Scanner(System.in);
-			int choice = input.nextInt();
+			int choice = -1;
+			try {
+				String tempinp = input.next();
+				tempinp = AppRunner.checkInput(tempinp, false, true);
+				choice = Integer.parseInt(tempinp);
+
+				if (AppRunner.INrange(choice,1, 5) == false) {
+					throw new NotInRangeException("Exception: input must be between 1 and 5 \n\n");
+				}
+
+			} catch (WrongInputException e) {
+				System.out.print(e.getMessage());
+				continue;
+			} catch (NotInRangeException e) {
+				System.out.print(e.getMessage());
+				continue;
+			}
 			Passenger newpassenger = null;
 
 			if (AppRunner.INrange(choice, 1, 5) == false) {

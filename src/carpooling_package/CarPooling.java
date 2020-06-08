@@ -503,7 +503,7 @@ class AppRunner {
 			}
 
 		}
-		
+
 		return null;
 
 	}
@@ -612,10 +612,47 @@ class AppRunner {
 			newpassenger = new NonSubscriber();
 			return newpassenger;
 		} else {
-			
+
 			throw new WrongInputException("exception: wrong input exceptoin \n");
 
 		}
+	}
+
+	public static boolean CheckifInteger(String input) {
+		for (int i = 0; i < input.length(); i++) {
+			char s = input.charAt(i);
+			if (s < 48 || s > 57) // check ascii of each character
+				return false;
+		}
+
+		return true;
+	}
+
+	public static boolean CheckIFString(String input) {
+		for (int i = 0; i < input.length(); i++) {
+			char s = input.charAt(i);
+			if (s >= 48 || s <= 57) // check ascii of each character
+				return false;
+		}
+
+		return true;
+	}
+
+	public static boolean checkInput(String input, boolean STRING, boolean Integer) throws WrongInputException {
+
+		if (STRING == false && Integer == true) {
+			if(CheckifInteger(input))
+				return true;
+			else 
+				throw new WrongInputException("Exception: Wrong input \n");
+		} else {
+			if(CheckifInteger(input))
+				return true;
+			else
+				throw new WrongInputException("Exception: Wrong input \n");
+			
+		}
+
 	}
 }
 
@@ -701,7 +738,10 @@ public class CarPooling {
 			input = new Scanner(System.in);
 			int choice = input.nextInt();
 			Passenger newpassenger = null;
-			if (choice == 1) {
+
+			if (AppRunner.INrange(choice, 1, 5) == false) {
+
+			} else if (choice == 1) {
 				String cont = "y";
 				while (cont.equalsIgnoreCase("y")) {
 
@@ -712,7 +752,7 @@ public class CarPooling {
 						break;
 					} catch (NoPassengerException e) {
 						System.out.println(e.getMessage());
-						System.out.println("press any key to go back or press (y/Y) to try again "); 
+						System.out.println("press any key to go back or press (y/Y) to try again ");
 
 						cont = input.next();
 						if (cont.equalsIgnoreCase("y")) {
@@ -723,7 +763,7 @@ public class CarPooling {
 
 					} catch (WrongInputException e) {
 						System.out.println(e.getMessage());
-						System.out.println("press any key to go back or press (y/Y) to try again "); 
+						System.out.println("press any key to go back or press (y/Y) to try again ");
 						cont = input.next();
 						if (cont.equalsIgnoreCase("y")) {
 							continue;

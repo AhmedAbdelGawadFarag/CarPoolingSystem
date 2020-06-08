@@ -3,6 +3,7 @@ package carpooling_package;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 /**
  * route that has a start Location and end Location
  * 
@@ -576,6 +577,19 @@ class AppRunner {
 		}
 	}
 
+	public static void SearchForRoute(String StartLocation, String Endlocation, ArrayList<Route> routes,ArrayList<Ride> rides) {
+		for (int i = 0; i < routes.size(); i++) {
+			Route route = routes.get(i);
+			if (route.getStartLocation().equalsIgnoreCase(StartLocation)
+					&& route.getEndLocation().equalsIgnoreCase(Endlocation)) {
+				System.out.println("rides for this route is \n ");
+				GetAvailRides(rides, route);
+
+				break;
+			}
+		}
+	}
+
 }
 
 public class CarPooling {
@@ -631,6 +645,7 @@ public class CarPooling {
 			System.out.println("2- subscribe");
 			System.out.println("3- unsubscribe");
 			System.out.println("4- Display Data");
+			System.out.println("5- Search for route");
 
 			input = new Scanner(System.in);
 			int choice = input.nextInt();
@@ -682,6 +697,12 @@ public class CarPooling {
 				int removedIndex = input.nextInt();
 
 				AppRunner.removeSubscibtion(passengers, SubscribedPassengers.get(removedIndex - 1));
+			} else if (choice == 5) {
+				System.out.print("Enter start location: ");
+				String startlocation = input.next();
+				System.out.print("\nEnter end location: ");
+				String endlocation = input.next();
+				AppRunner.SearchForRoute(startlocation, endlocation, routes, rides);
 			}
 
 		}

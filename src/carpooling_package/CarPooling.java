@@ -3,7 +3,6 @@ package carpooling_package;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 /**
  * route that has a start Location and end Location
  * 
@@ -397,9 +396,10 @@ class Subscriber extends Passenger {
 	 * @param name name of the passenger
 	 * @param age  age of the passenger
 	 */
-	public Subscriber(String name, int age) {
+	public Subscriber(String name, int age, int reservedTrips) {
 		this.name = name;
 		this.age = age;
+		this.reservedTrips = reservedTrips;
 	}
 
 	public Passenger unsubscribe() {
@@ -421,7 +421,8 @@ class Subscriber extends Passenger {
 
 	@Override
 	public void DisplayData() {
-		System.out.printf("Type:subscriber name:%s age:%s \n", this.name, this.age);
+		System.out.printf("Type:subscriber name:%s age:%s Reserved trips:%d  \n", this.name, this.age,
+				this.reservedTrips);
 
 		System.out.print("rides that this passenger took:\n");
 		for (int i = 0; i < this.tickets.size(); i++) {
@@ -531,7 +532,7 @@ class AppRunner {
 			int numoftrips = input.nextInt();
 
 			if (temp.cansubscribe(age, numoftrips) == true) {
-				Subscriber newSubscriber = new Subscriber(name, age);
+				Subscriber newSubscriber = new Subscriber(name, age, numoftrips);
 				passengers.add(newSubscriber);
 				return;
 			} else {
@@ -577,17 +578,18 @@ class AppRunner {
 		}
 	}
 
-	public static void SearchForRoute(String StartLocation, String Endlocation, ArrayList<Route> routes,ArrayList<Ride> rides) {
+	public static void SearchForRoute(String StartLocation, String Endlocation, ArrayList<Route> routes,
+			ArrayList<Ride> rides) {
 		for (int i = 0; i < routes.size(); i++) {
 			Route route = routes.get(i);
 			if (route.getStartLocation().equalsIgnoreCase(StartLocation)
 					&& route.getEndLocation().equalsIgnoreCase(Endlocation)) {
 				System.out.println("rides for this route is \n ");
 				GetAvailRides(rides, route);
-
-				break;
+				return;
 			}
 		}
+		System.out.println("There is no rides for this destination\n\n");
 	}
 
 }
@@ -602,9 +604,9 @@ public class CarPooling {
 		Scanner input;
 
 		passengers = new ArrayList<Passenger>();
-		passengers.add(new Subscriber("ahmed", 23));
-		passengers.add(new Subscriber("Mohamed", 26));
-		passengers.add(new Subscriber("isaac", 14));
+		passengers.add(new Subscriber("ahmed", 23, 2));
+		passengers.add(new Subscriber("Mohamed", 26, 4));
+		passengers.add(new Subscriber("isaac", 14, 3));
 
 		passengers.add(new NonSubscriber());
 		passengers.add(new NonSubscriber());

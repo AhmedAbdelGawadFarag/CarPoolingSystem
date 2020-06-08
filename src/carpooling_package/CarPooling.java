@@ -3,7 +3,6 @@ package carpooling_package;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 /**
  * route that has a start Location and end Location
  * 
@@ -205,6 +204,10 @@ class Ride {
 		passngers = new ArrayList<Passenger>();
 	}
 
+	public boolean canAdd() {
+		return (availTickets > 0);
+	}
+
 	public void addPassenger(Passenger p) {
 		double ticketPrice = Discount.getDiscount(this, p);
 		Ticket newTicket = new Ticket(ticketPrice, this);
@@ -398,6 +401,15 @@ class Subscriber extends Passenger {
 		this.age = age;
 	}
 
+	public Passenger unsubscribe() {
+		Passenger p = new NonSubscriber();
+		for (int i = 0; i < tickets.size(); i++) {
+			Ticket t = tickets.get(i);
+			p.addTicket(t);
+		}
+		return p;
+	}
+
 	/**
 	 * get ticket discount for the subscriber passenger
 	 */
@@ -445,7 +457,8 @@ public class CarPooling {
 	public static void printOndeRide(Ride ride) {
 		String StartLocation = ride.getRoute().getStartLocation();
 		String EndLocation = ride.getRoute().getEndLocation();
-		System.out.printf("carcode:%s price:%f\n", ride.getCar().getCarCode(), ride.getPrice());
+		System.out.printf("carcode:%s price:%f available tickets:%d \n", ride.getCar().getCarCode(), ride.getPrice(),
+				ride.getAvailTickets());
 
 	}
 
@@ -533,6 +546,41 @@ public class CarPooling {
 		}
 	}
 
+	public static ArrayList<Passenger> GetSubscibed() {
+		System.out.println("Subscribed passngers list :- \n");
+		ArrayList<Passenger> SubscribedPassengers = new ArrayList<Passenger>();
+		for (int i = 0; i < passengers.size(); i++) {
+			Passenger p = passengers.get(i);
+			if (p instanceof Subscriber) {
+
+				Subscriber s = (Subscriber) p;
+				SubscribedPassengers.add(p);
+				System.out.printf("%d: name:%s\n", i + 1, s.name);
+			}
+		}
+		return SubscribedPassengers;
+	}
+
+	public static void removeSubscibtion(Passenger p) {
+		for (int i = 0; i < passengers.size(); i++) {
+			Passenger toberemoved = passengers.get(i);
+
+			if (toberemoved instanceof Subscriber) {
+				Subscriber p1 = (Subscriber) toberemoved;
+				Subscriber p2 = (Subscriber) p;
+
+				if (p1.name.equals(p2.name)) {
+					passengers.remove(i);
+					passengers.add(i, p1.unsubscribe());
+
+					return;
+				}
+
+			}
+
+		}
+	}
+
 	public static void main(String[] args) {
 
 		passengers = new ArrayList<Passenger>();
@@ -561,6 +609,7 @@ public class CarPooling {
 		rides.add(new Ride(routes.get(0), cars.get(0), 125));
 		rides.get(0).addPassenger(passengers.get(0));
 		rides.get(0).addPassenger(passengers.get(3));
+		rides.get(0).addPassenger(passengers.get(1));
 
 		rides.add(new Ride(routes.get(1), cars.get(0), 75));
 		rides.get(1).addPassenger(passengers.get(1));
@@ -605,16 +654,36 @@ public class CarPooling {
 				String routeNumber = input.next();
 
 				ArrayList<Ride> AvailRides = GetAvailRides(routes.get(Integer.parseInt(routeNumber) - 1));
-				System.out.print("Enter ride number : ");
-				int ridenumber = input.nextInt();
-				AvailRides.get(ridenumber - 1).addPassenger(newpassenger);
-				if (newpassenger instanceof NonSubscriber)
-					passengers.add(newpassenger);
+				while (true) {
+					System.out.print("Enter ride number : ");
+					int ridenumber = input.nextInt();
+					Ride r = AvailRides.get(ridenumber - 1);
+					if (r.canAdd()) {
+
+						r.addPassenger(newpassenger);
+
+						if (newpassenger instanceof NonSubscriber)
+							passengers.add(newpassenger);
+
+						break;
+
+					} else {
+						System.out.println("There is no place in that ride please enter another ride \n");
+						continue;
+					}
+				}
 
 			} else if (choice == 4) {
 				displayPassengersData();
 			} else if (choice == 2) {
 				addnewSbuscriber();
+			} else if (choice == 3) {
+				ArrayList<Passenger> SubscribedPassengers = GetSubscibed();
+
+				System.out.println("choose (1 or 2 or 3 or -------) remove its subscribtion");
+				int removedIndex = input.nextInt();
+
+				removeSubscibtion(SubscribedPassengers.get(removedIndex - 1));
 			}
 
 		}

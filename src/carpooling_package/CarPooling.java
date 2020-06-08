@@ -521,26 +521,52 @@ class AppRunner {
 		char choice = 'y';
 
 		while (choice == 'y') {
-			System.out.printf("minimum number of age and trips to subscribe age=%d  trips=%d \n", temp.miniage,
-					temp.minitrips);
-			System.out.println("type your name please");
-			String name = input.next();
-			System.out.println("type your age please");
-			int age = input.nextInt();
-			System.out.println("type your number of trips you want to reserve please");
+			try {
+				System.out.printf("minimum number of age and trips to subscribe age=%d  trips=%d \n", temp.miniage,
+						temp.minitrips);
+				System.out.println("type your name please");
+				String name = input.next();
+				name = checkInput(name, true, false);
 
-			int numoftrips = input.nextInt();
+				System.out.println("type your age please");
+				String TEmpAgeInput = input.next();
+				TEmpAgeInput = checkInput(TEmpAgeInput, false, true);
+				int age = Integer.parseInt(TEmpAgeInput);
 
-			if (temp.cansubscribe(age, numoftrips) == true) {
-				Subscriber newSubscriber = new Subscriber(name, age, numoftrips);
-				passengers.add(newSubscriber);
-				return;
-			} else {
-				System.out.println("you cant subscribe (age or trips is less than the minimum) ");
-				System.out.println("press y to try again or c to cancel");
-				choice = input.next().charAt(0);
+				System.out.println("type your number of trips you want to reserve please");
+				String TempNumInput = input.next();
+				TempNumInput = checkInput(TempNumInput, false, true);
+				int numoftrips = Integer.parseInt(TempNumInput);
+
+				if (temp.cansubscribe(age, numoftrips) == true) {
+
+					Subscriber newSubscriber = new Subscriber(name, age, numoftrips);
+					passengers.add(newSubscriber);
+					System.out.println("     successfully subscribed \n\n");
+
+					return;
+				} else {
+
+					System.out.println("you cant subscribe (age or trips is less than the minimum) ");
+					System.out.println("press y to try again or c to cancel");
+					choice = input.next().charAt(0);
+
+				}
+			} catch (WrongInputException e) {
+
+				System.out.println(e.getMessage());
+
+				System.out.println("type any key to go back or type (y/Y) to try again ");
+				String cont = input.next();
+				if (cont.equalsIgnoreCase("y")) {
+					continue;
+				} else {
+					break;
+				}
+
 			}
 		}
+
 	}
 
 	public static ArrayList<Passenger> GetSubscibed(ArrayList<Passenger> passengers) {
@@ -631,7 +657,7 @@ class AppRunner {
 	public static boolean CheckIFString(String input) {
 		for (int i = 0; i < input.length(); i++) {
 			char s = input.charAt(i);
-			if (s >= 48 || s <= 57) // check ascii of each character
+			if (s >= 48 && s <= 57) // check ascii of each character
 				return false;
 		}
 
@@ -646,7 +672,7 @@ class AppRunner {
 			else
 				throw new WrongInputException("Exception: Wrong input please type integer only \n\n");
 		} else {
-			if (CheckifInteger(input))
+			if (CheckIFString(input))
 				return input;
 			else
 				throw new WrongInputException("Exception: Wrong input please type string only \n\n");
@@ -741,7 +767,7 @@ public class CarPooling {
 				tempinp = AppRunner.checkInput(tempinp, false, true);
 				choice = Integer.parseInt(tempinp);
 
-				if (AppRunner.INrange(choice,1, 5) == false) {
+				if (AppRunner.INrange(choice, 1, 5) == false) {
 					throw new NotInRangeException("Exception: input must be between 1 and 5 \n\n");
 				}
 
@@ -752,11 +778,10 @@ public class CarPooling {
 				System.out.print(e.getMessage());
 				continue;
 			}
+
 			Passenger newpassenger = null;
 
-			if (AppRunner.INrange(choice, 1, 5) == false) {
-
-			} else if (choice == 1) {
+			if (choice == 1) {
 				String cont = "y";
 				while (cont.equalsIgnoreCase("y")) {
 
@@ -767,7 +792,7 @@ public class CarPooling {
 						break;
 					} catch (NoPassengerException e) {
 						System.out.println(e.getMessage());
-						System.out.println("press any key to go back or press (y/Y) to try again ");
+						System.out.println("type any key to go back or type (y/Y) to try again ");
 
 						cont = input.next();
 						if (cont.equalsIgnoreCase("y")) {
@@ -778,7 +803,7 @@ public class CarPooling {
 
 					} catch (WrongInputException e) {
 						System.out.println(e.getMessage());
-						System.out.println("press any key to go back or press (y/Y) to try again ");
+						System.out.println("type any key to go back or type (y/Y) to try again ");
 						cont = input.next();
 						if (cont.equalsIgnoreCase("y")) {
 							continue;
@@ -803,6 +828,9 @@ public class CarPooling {
 						r.addPassenger(newpassenger);
 						if (newpassenger instanceof NonSubscriber)
 							passengers.add(newpassenger);
+
+						System.out.println("        reserved successfully     \n \n");
+
 					} else {
 						System.out.println("There is no place in that ride\n");
 						continue;
@@ -813,18 +841,40 @@ public class CarPooling {
 			} else if (choice == 2) {
 				AppRunner.addnewSbuscriber(input, passengers);
 			} else if (choice == 3) {
+
 				ArrayList<Passenger> SubscribedPassengers = AppRunner.GetSubscibed(passengers);
 
 				System.out.println("choose (1 or 2 or 3 or -------) remove its subscribtion");
-				int removedIndex = input.nextInt();
+				while (true) {
+					try {
 
-				AppRunner.removeSubscibtion(passengers, SubscribedPassengers.get(removedIndex - 1));
+						String TempRempovdIndex = input.next();
+						TempRempovdIndex = AppRunner.checkInput(TempRempovdIndex, false, true);
+						int removedIndex = Integer.parseInt(TempRempovdIndex);
+						AppRunner.removeSubscibtion(passengers, SubscribedPassengers.get(removedIndex - 1));
+
+					} catch (WrongInputException e) {
+						System.out.println(e.getMessage());
+
+						System.out.println("type any key to go back or type (y/Y) to try again ");
+						String cont = input.next();
+						if (cont.equalsIgnoreCase("y")) {
+							continue;
+						} else {
+							break;
+						}
+
+					}
+				}
+
 			} else if (choice == 5) {
+
 				System.out.print("Enter start location: ");
 				String startlocation = input.next();
 				System.out.print("\nEnter end location: ");
 				String endlocation = input.next();
 				AppRunner.SearchForRoute(startlocation, endlocation, routes, rides);
+
 			}
 
 		}

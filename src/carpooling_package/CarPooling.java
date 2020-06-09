@@ -964,7 +964,7 @@ public class CarPooling {
 				choice = Integer.parseInt(tempinp);
 
 				if (AppRunner.INrange(choice, 1, 6) == false) {
-					throw new NotInRangeException("Exception: input must be between 1 and 5 \n\n");
+					throw new NotInRangeException("Exception: input must be between 1 and 6 \n\n");
 				}
 
 			} catch (WrongInputException e) {

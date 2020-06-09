@@ -8,7 +8,7 @@ import java.util.Scanner;
  * 
  * @author Beeka
  */
-class Route {
+ class Route {
 	private String startLocation;
 	private String endLocation;
 
@@ -58,16 +58,16 @@ class Route {
 }
 
 /**
- * car that has codenumber , drivername ,capacity ,trips in each day ,
- * passengers
+ * car that has codenumber , drivername ,capacity ,trips in each day 
+ * 
  * 
  * @author Beeka
  */
 class Car {
-	private final String Codenumber;
-	private final String driverName;
-	private final int capacity;
-	private int TripsPerDay;
+	private final String Codenumber;// private 	final
+	private final String driverName;//private final
+	private final int capacity;//private final
+	private int TripsPerDay;//private
 
 	/**
 	 * initialize car object with code number , drivername , capacity , trips in day
@@ -113,15 +113,15 @@ class Car {
 }
 
 /**
- * Ticket that has a price and Ride
+ * Ticket that has a price and Ride as each ticket belong to one ride
  * 
  * @author Beeka
  *
  */
 class Ticket {
-	private double price;
-	private final Ride ride;// ride refrence
-	private final String carcode;
+	private double price;//private final
+	private final Ride ride;// private final
+	private final String carcode;//private final
 
 	/**
 	 * 
@@ -134,6 +134,13 @@ class Ticket {
 		this.price = price;
 		this.ride = ride;
 		carcode = ride.getCar().getCarCode();
+	}
+	
+	//overloading
+	public Ticket(double price, Ride ride,String CarCode) {
+		this.price = price;
+		this.ride = ride;
+		carcode = CarCode;
 	}
 
 	/**
@@ -211,7 +218,7 @@ class Ride {
 	public void addPassenger(Passenger p) {
 		double ticketPrice = Discount.getDiscount(this, p);
 		Ticket newTicket = new Ticket(ticketPrice, this);
-		p.addTicket(newTicket);// add last ticket from the avail tickets
+		p.addTicket(newTicket);//final method
 
 		passngers.add(p);
 
@@ -262,6 +269,7 @@ abstract class Passenger {
 	}
 
 	/**
+	 * abstract function that are responsible for setting the discount amount 
 	 * @return ticket discount for the classes that extends that abstract class
 	 */
 	abstract public double discount();
@@ -271,10 +279,13 @@ abstract class Passenger {
 	 * 
 	 * @param ticket ticket of the passenger
 	 */
-	protected void addTicket(Ticket ticket) {
+	protected final void addTicket(Ticket ticket) {//final method
 		tickets.add(ticket);
 	}
-
+	
+	/**
+	 * function that displays the data of passenger object
+	 */
 	abstract public void DisplayData();
 
 }
@@ -292,7 +303,8 @@ abstract class Passenger {
  * 
  * @author Beeka
  */
-abstract class Discount {
+abstract class Discount { //open closed principle ( solid principle )
+	
 	// this is abstract because i dont want to make an object from this Discount
 	// class
 
@@ -301,11 +313,11 @@ abstract class Discount {
 	 * automatically by calling discount in each passenger class if he subscribe or
 	 * he didn't subscribe then takes the ticket
 	 * 
-	 * @param T         ticket object
+	 * @param r         ride object
 	 * @param passenger object of the type of passenger
 	 * @return discount of the ticket
 	 */
-	public static double getDiscount(Ride r, Passenger passenger) {
+	public static double getDiscount(Ride r, Passenger passenger) {//static function
 		return (r.getPrice() - passenger.discount() * r.getPrice());
 	}
 }
@@ -315,7 +327,7 @@ abstract class Discount {
  * 
  * @author Beeka
  */
-interface Isubscribable {
+interface Isubscribable { //open closed principle ( solid principle )
 	int miniage = 20; // minimum age to subscibe;
 	int minitrips = 5; // minmum trips you can subsribe to
 
@@ -326,7 +338,7 @@ interface Isubscribable {
 	 * @param Trips number of trips of the passenger
 	 * @return true if he can subscribe , false otherwise
 	 */
-	public boolean cansubscribe(int age, int Trips);
+	public boolean cansubscribe(int age, int Trips);//overriding
 }
 
 /**
@@ -345,7 +357,7 @@ class NonSubscriber extends Passenger implements Isubscribable {
 	/**
 	 * discount for the non subscriber passenger class
 	 */
-	@Override
+	@Override //override
 	public double discount() {
 		// there is no discount for the nonsubscriber class so the discount will be 0
 		return 0;
@@ -354,15 +366,15 @@ class NonSubscriber extends Passenger implements Isubscribable {
 	/**
 	 * check if this passenger can subscribe or not
 	 */
-	@Override
-	public boolean cansubscribe(int age, int Trips) {
+	@Override //override
+	public boolean cansubscribe(int age, int Trips) { //overriding
 		if (this.miniage <= age && this.minitrips <= Trips) {
 			return true;
 		}
 		return false;
 	}
 
-	@Override
+	@Override //override
 	public void DisplayData() {
 		System.out.print("Type:non subscriber \n");
 
@@ -386,7 +398,7 @@ class NonSubscriber extends Passenger implements Isubscribable {
  */
 class Subscriber extends Passenger {
 	int reservedTrips;
-	public final String name;
+	public final String name;//final
 	public int age;
 
 	/**
@@ -395,18 +407,22 @@ class Subscriber extends Passenger {
 	 * 
 	 * @param name name of the passenger
 	 * @param age  age of the passenger
+	 * @param reservedTrips the reserved Trips of that passenger
 	 */
 	public Subscriber(String name, int age, int reservedTrips) {
 		this.name = name;
 		this.age = age;
 		this.reservedTrips = reservedTrips;
 	}
-
+	/**
+	 * 
+	 * @return non subscriber passenger object after moving all the data to non subscriber
+	 */
 	public Passenger unsubscribe() {
 		Passenger p = new NonSubscriber();
 		for (int i = 0; i < tickets.size(); i++) {
 			Ticket t = tickets.get(i);
-			p.addTicket(t);
+			p.addTicket(t);//final method
 		}
 		return p;
 	}
@@ -438,7 +454,11 @@ class Subscriber extends Passenger {
 		}
 	}
 }
-
+/**
+ * AppRunner class is the class that is resposible for getting all the data to work with it
+ * @author Beeka
+ *
+ */
 class AppRunner {
 
 	public static void getallroute(ArrayList<Route> routes) {
@@ -538,7 +558,7 @@ class AppRunner {
 				TempNumInput = checkInput(TempNumInput, false, true);
 				int numoftrips = Integer.parseInt(TempNumInput);
 
-				if (temp.cansubscribe(age, numoftrips) == true) {
+				if (temp.cansubscribe(age, numoftrips) == true) {//override
 
 					Subscriber newSubscriber = new Subscriber(name, age, numoftrips);
 					passengers.add(newSubscriber);
@@ -572,13 +592,15 @@ class AppRunner {
 	public static ArrayList<Passenger> GetSubscibed(ArrayList<Passenger> passengers) {
 		System.out.println("Subscribed passngers list :- \n");
 		ArrayList<Passenger> SubscribedPassengers = new ArrayList<Passenger>();
+		int cnt = 1;
 		for (int i = 0; i < passengers.size(); i++) {
 			Passenger p = passengers.get(i);
 			if (p instanceof Subscriber) {
 
 				Subscriber s = (Subscriber) p;
 				SubscribedPassengers.add(p);
-				System.out.printf("%d: name:%s\n", i + 1, s.name);
+				System.out.printf("%d: name:%s\n", cnt, s.name);
+				cnt++;
 			}
 		}
 		return SubscribedPassengers;
@@ -682,7 +704,11 @@ class AppRunner {
 	}
 	
 }
-
+/**
+ * exception that is responsible for checking range of number
+ * @author Beeka
+ *
+ */
 class NotInRangeException extends Exception {
 
 	public NotInRangeException(String msg) {
@@ -690,7 +716,11 @@ class NotInRangeException extends Exception {
 	}
 
 }
-
+/**
+ * exception that is responsible for checking input exception
+ * @author Beeka
+ *
+ */
 class WrongInputException extends Exception {
 
 	public WrongInputException(String msg) {
@@ -698,7 +728,11 @@ class WrongInputException extends Exception {
 	}
 
 }
-
+/**
+ * exception that is responsible for checking if there is no passenger with that name
+ * @author Beeka
+ *
+ */
 class NoPassengerException extends Exception {
 
 	public NoPassengerException(String msg) {
@@ -706,7 +740,11 @@ class NoPassengerException extends Exception {
 	}
 
 }
-
+/**
+ * main class
+ * @author Beeka
+ *
+ */
 public class CarPooling {
 
 	public static void main(String[] args) {

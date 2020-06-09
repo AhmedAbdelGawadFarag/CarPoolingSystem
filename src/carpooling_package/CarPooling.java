@@ -754,7 +754,7 @@ public class CarPooling {
 		rides.add(new Ride(routes.get(4), cars.get(3), 35));
 
 		while (true) {
-			System.out.println("enter (1 or 2 or 3) to choose ");
+			System.out.println("enter (1 or 2 or 3 or .......) to choose ");
 			System.out.println("1- reserve");
 			System.out.println("2- subscribe");
 			System.out.println("3- unsubscribe");
@@ -786,11 +786,14 @@ public class CarPooling {
 				while (cont.equalsIgnoreCase("y")) {
 
 					try {
+
 						newpassenger = AppRunner.firstchoice(input, newpassenger, passengers);
 						if (newpassenger == null)
 							throw new NoPassengerException("Exception: There is no passenger with that name \n");
 						break;
+
 					} catch (NoPassengerException e) {
+
 						System.out.println(e.getMessage());
 						System.out.println("type any key to go back or type (y/Y) to try again ");
 
@@ -802,6 +805,7 @@ public class CarPooling {
 						}
 
 					} catch (WrongInputException e) {
+
 						System.out.println(e.getMessage());
 						System.out.println("type any key to go back or type (y/Y) to try again ");
 						cont = input.next();
@@ -816,24 +820,81 @@ public class CarPooling {
 				}
 				if (cont.equalsIgnoreCase("y")) {
 					AppRunner.getallroute(routes);
-					System.out.print("Enter route number : \n");
-					String routeNumber = input.next();
+					int routeNumber = -1;
+					boolean conti = true;
+					while (true) {
+						try {
+							System.out.print("Enter route number : \n");
+							String TempRouteInput = input.next();
+							TempRouteInput = AppRunner.checkInput(TempRouteInput, false, true);
+							routeNumber = Integer.parseInt(TempRouteInput);
 
-					ArrayList<Ride> AvailRides = AppRunner.GetAvailRides(rides,
-							routes.get(Integer.parseInt(routeNumber) - 1));
-					System.out.print("Enter ride number : ");
-					int ridenumber = input.nextInt();
-					Ride r = AvailRides.get(ridenumber - 1);
-					if (r.canAdd()) {
-						r.addPassenger(newpassenger);
-						if (newpassenger instanceof NonSubscriber)
-							passengers.add(newpassenger);
+							if (AppRunner.INrange(routeNumber, 1, routes.size() - 1) == false)
+								throw new NotInRangeException(
+										"Exception: not in range you must enter digit within the range \n");
 
-						System.out.println("        reserved successfully     \n \n");
+							break;
+						} catch (WrongInputException e) {
 
-					} else {
-						System.out.println("There is no place in that ride\n");
-						continue;
+							System.out.println(e.getMessage());
+
+							System.out.println("type any key to go back or type (y/Y) to try again ");
+							cont = input.next();
+							if (cont.equalsIgnoreCase("y")) {
+								continue;
+							} else {
+								conti = false;
+								break;
+							}
+
+						} catch (NotInRangeException e) {
+							System.out.println(e.getMessage());
+							System.out.println("type any key to go back or type (y/Y) to try again ");
+							cont = input.next();
+							if (cont.equalsIgnoreCase("y")) {
+								continue;
+							} else {
+								conti = false;
+								break;
+							}
+						}
+					}
+					if (conti) {
+						ArrayList<Ride> AvailRides = AppRunner.GetAvailRides(rides, routes.get(routeNumber));
+						while (true) {
+							try {
+								System.out.print("Enter ride number : ");
+								String TempRide = input.next();
+								TempRide = AppRunner.checkInput(TempRide, false, true);
+								int ridenumber = Integer.parseInt(TempRide);
+								if (AppRunner.INrange(ridenumber, 1, AvailRides.size()) == false)
+									throw new NotInRangeException(
+											"Exception: not in range you must enter digit within the range \n");
+
+								Ride r = AvailRides.get(ridenumber - 1);
+								if (r.canAdd()) {
+									r.addPassenger(newpassenger);
+									if (newpassenger instanceof NonSubscriber)
+										passengers.add(newpassenger);
+
+									System.out.println("        reserved successfully     \n \n");
+
+								} else {
+									System.out.println("There is no place in that ride\n");
+									continue;
+								}
+							} catch (Exception e) {
+								System.out.print(e.getMessage());
+								System.out.println("type any key to go back or type (y/Y) to try again \n ");
+								cont = input.next();
+								if (cont.equalsIgnoreCase("y")) {
+									continue;
+								} else {
+									break;
+								}
+
+							}
+						}
 					}
 				}
 			} else if (choice == 4) {
@@ -852,8 +913,9 @@ public class CarPooling {
 						String TempRempovdIndex = input.next();
 						TempRempovdIndex = AppRunner.checkInput(TempRempovdIndex, false, true);
 						int removedIndex = Integer.parseInt(TempRempovdIndex);
-						if (AppRunner.INrange(removedIndex, 0, SubscribedPassengers.size() - 1) == false)
-							throw new NotInRangeException("Exception: not in range you must enter digit within the range \n");
+						if (AppRunner.INrange(removedIndex, 1, SubscribedPassengers.size()) == false)
+							throw new NotInRangeException(
+									"Exception: not in range you must enter digit within the range \n");
 
 						AppRunner.removeSubscibtion(passengers, SubscribedPassengers.get(removedIndex - 1));
 						break;

@@ -67,7 +67,8 @@ class Car {
 	private final String Codenumber;// private final
 	private final String driverName;// private final
 	private final int capacity;// private final
-	private int TripsPerDay;// private
+	protected int TripsPerDay;// private
+	public ArrayList<String> CarReview;
 
 	/**
 	 * initialize car object with code number , drivername , capacity , trips in day
@@ -82,6 +83,7 @@ class Car {
 		this.capacity = capacity;
 		this.driverName = driverName;
 		this.TripsPerDay = TripsPerDay;
+		CarReview = new ArrayList<String>();
 	}
 
 	/**
@@ -110,6 +112,17 @@ class Car {
 		return capacity;
 	}
 
+	public void addReview(String review) {
+		this.CarReview.add(review);
+	}
+
+	public void GetCarReviews() {
+		for (int i = 0; i < CarReview.size(); i++) {
+
+			System.out.printf("Review%d: %s \n\n", i + 1, CarReview.get(i));
+
+		}
+	}
 }
 
 /**
@@ -328,7 +341,7 @@ abstract class Discount { // open closed principle ( solid principle )
  * 
  * @author Beeka
  */
-interface Isubscribable { // open closed principle ( solid principle )
+interface Isubscribable { // interface segregation principle ( solid principle )
 	int miniage = 20;// static minimum age to subscibe;
 	int minitrips = 5;// static minmum trips you can subsribe to
 
@@ -385,9 +398,10 @@ class NonSubscriber extends Passenger implements Isubscribable {
 			Ride ride = ticket.getRide();
 			Route route = ride.getRoute();
 			Car car = ride.getCar();
-			System.out.printf("start location : %s end location: %s CarCode %s ", route.getStartLocation(),
+			System.out.printf("start location : %s - end location: %s - CarCode %s ", route.getStartLocation(),
 					route.getEndLocation(), car.getCarCode());
-			System.out.printf("ride Price :%f Ticket Price(after discount):%f \n", ride.getPrice(), ticket.getPrice());
+			System.out.printf("ride Price :%f - Ticket Price(after discount):%f \n", ride.getPrice(),
+					ticket.getPrice());
 		}
 	}
 }
@@ -469,7 +483,17 @@ class AppRunner {
 
 	public static void getallroute(ArrayList<Route> routes) {
 		System.out.println("choose the route you want to reverse a car in it ");
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < routes.size(); i++) {
+			System.out.printf("%d: start location: %s       end location: %s \n", i + 1,
+					routes.get(i).getStartLocation(), routes.get(i).getEndLocation());
+
+		}
+
+	}
+
+	public static void RoutesTocomplain(ArrayList<Route> routes) {
+		System.out.println("choose the route you want to review a car in it ");
+		for (int i = 0; i < routes.size(); i++) {
 			System.out.printf("%d: start location: %s       end location: %s \n", i + 1,
 					routes.get(i).getStartLocation(), routes.get(i).getEndLocation());
 
@@ -480,7 +504,7 @@ class AppRunner {
 	public static void printOndeRide(Ride ride, Passenger p) {
 		String StartLocation = ride.getRoute().getStartLocation();
 		String EndLocation = ride.getRoute().getEndLocation();
-		System.out.printf("carcode:%s price:%f price After Discount:%f available tickets:%d \n",
+		System.out.printf("carcode:%s - price:%f - price After Discount:%f - available tickets:%d \n",
 				ride.getCar().getCarCode(), ride.getPrice(), Discount.getDiscount(ride, p), ride.getAvailTickets());
 
 	}
@@ -539,6 +563,63 @@ class AppRunner {
 			System.out.printf("passenger:%d\n", i + 1);
 			passengers.get(i).DisplayData();
 			System.out.print("\n\n");
+		}
+	}
+
+	public static Car SearchForCar(String CarCode, ArrayList<Ride> rides) throws WrongInputException {
+		CarCode = checkInput(CarCode, false, true);
+
+		for (int i = 0; i < rides.size(); i++) {
+			Ride ride = rides.get(i);
+			if (ride.getCar().getCarCode().equalsIgnoreCase(CarCode)) {
+				return ride.getCar();
+			}
+		}
+		return null;
+	}
+
+	public static void choosereview(Scanner input, ArrayList<Ride> rides) {
+		while (true) {
+			try {
+				System.out.println("choose what you want to do \n");
+				System.out.println("1-:add review");
+				System.out.println("2-:Get review");
+				String choice = input.next();
+				choice = checkInput(choice, false, true);
+				int cho = Integer.parseInt(choice);
+				if (INrange(cho, 1, 2) == false)
+					throw new NotInRangeException("Exception: not in range excaption \n\n");
+				if (cho == 1) {
+					System.out.print("type car code  number \n");
+					String carCode = input.next();
+					Car m = SearchForCar(carCode, rides);
+					if (m == null)
+						throw new Exception("No car with that code\n");
+					
+						System.out.println("please enter your review \n");
+						String rv = input.next();
+						m.addReview(rv);
+					
+				} else {
+					System.out.print("type car code  number \n");
+					String carCode = input.next();
+					Car m = SearchForCar(carCode, rides);
+					if (m == null)
+						throw new Exception("exception: No car with that code\n");
+					
+						m.GetCarReviews();
+				}
+				break;
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				System.out.println("type any key to go back or type (y/Y) to try again \n");
+				String cont = input.next();
+				if (cont.equalsIgnoreCase("y")) {
+					continue;
+				} else {
+					break;
+				}
+			}
 		}
 	}
 
@@ -791,29 +872,40 @@ public class CarPooling {
 		Scanner input;
 
 		passengers = new ArrayList<Passenger>();
-		passengers.add(new Subscriber("ahmed", 23, 2));
-		passengers.add(new Subscriber("Mohamed", 26, 4));
-		passengers.add(new Subscriber("isaac", 14, 3));
+		passengers.add(new Subscriber("ahmed", 23, 2));// Subscriber1
+		passengers.add(new Subscriber("Mohamed", 26, 4));// Subscriber2
+		passengers.add(new Subscriber("isaac", 14, 3));// Subscriber3
 
-		passengers.add(new NonSubscriber());
-		passengers.add(new NonSubscriber());
+		passengers.add(new NonSubscriber());// Subscriber4
+		passengers.add(new NonSubscriber());// Subscriber5
 
-		routes = new ArrayList<Route>();
+		routes = new ArrayList<Route>(); // routes
 		routes.add(new Route("nasr city", "shoubra"));
 		routes.add(new Route("abbasia", "october city"));
 		routes.add(new Route("alex", "mansoura"));
 		routes.add(new Route("shoubra", "nasr city"));
 		routes.add(new Route("october city", "abbasia"));
 
-		cars = new ArrayList<Car>();
+		cars = new ArrayList<Car>();// car
+
 		cars.add(new Car("2020198465", "abdelwahab", 4, 2));
+		cars.get(0).addReview("Great car");
+
 		cars.add(new Car("2014356879", "mahmoud", 5, 2));
+		cars.get(1).addReview("Not bad");
+
 		cars.add(new Car("2013789456", "abanoub", 4, 2));
+		cars.get(2).addReview("amazing car and driver");
+
 		cars.add(new Car("2010354987", "ibrahim", 5, 2));
+		cars.get(3).addReview("Great car");
 
-		rides = new ArrayList<Ride>();
+		cars.add(new Car("2009064681", "salah", 5, 2));
+		cars.get(4).addReview("really bad car");
 
-		rides.add(new Ride(routes.get(0), cars.get(0), 125));
+		rides = new ArrayList<Ride>();// rides
+
+		rides.add(new Ride(routes.get(0), cars.get(0), 125));// ride 1
 		rides.get(0).addPassenger(passengers.get(0));
 		rides.get(0).addPassenger(passengers.get(3));
 		rides.get(0).addPassenger(passengers.get(1));
@@ -826,7 +918,11 @@ public class CarPooling {
 		rides.get(2).addPassenger(passengers.get(0));
 		rides.get(2).addPassenger(passengers.get(4));
 
-		rides.add(new Ride(routes.get(4), cars.get(3), 35));
+		rides.add(new Ride(routes.get(3), cars.get(3), 35));
+
+		rides.add(new Ride(routes.get(2), cars.get(2), 35));
+
+		rides.add(new Ride(routes.get(4), cars.get(2), 35));
 
 		while (true) {
 			System.out.println("enter (1 or 2 or 3 or .......) to choose ");
@@ -835,6 +931,7 @@ public class CarPooling {
 			System.out.println("3- unsubscribe");
 			System.out.println("4- Display Data");
 			System.out.println("5- Search for route");
+			System.out.println("6- Get / Add review");
 			input = new Scanner(System.in);
 			int choice = -1;
 			try {
@@ -842,7 +939,7 @@ public class CarPooling {
 				tempinp = AppRunner.checkInput(tempinp, false, true);
 				choice = Integer.parseInt(tempinp);
 
-				if (AppRunner.INrange(choice, 1, 5) == false) {
+				if (AppRunner.INrange(choice, 1, 6) == false) {
 					throw new NotInRangeException("Exception: input must be between 1 and 5 \n\n");
 				}
 
@@ -1030,7 +1127,10 @@ public class CarPooling {
 				String endlocation = input.next();
 				AppRunner.SearchForRoute(startlocation, endlocation, routes, rides);
 
-			} 
+			} else if (choice == 6) {
+				AppRunner.choosereview(input, rides);
+
+			}
 
 		}
 	}

@@ -328,8 +328,8 @@ abstract class Discount { //open closed principle ( solid principle )
  * @author Beeka
  */
 interface Isubscribable { //open closed principle ( solid principle )
-	int miniage = 20; // minimum age to subscibe;
-	int minitrips = 5; // minmum trips you can subsribe to
+	int miniage = 20;// static  minimum age to subscibe;
+	int minitrips = 5;// static  minmum trips you can subsribe to
 
 	/**
 	 * check if the passenger can subscribe or not
@@ -368,7 +368,7 @@ class NonSubscriber extends Passenger implements Isubscribable {
 	 */
 	@Override //override
 	public boolean cansubscribe(int age, int Trips) { //overriding
-		if (this.miniage <= age && this.minitrips <= Trips) {
+		if (this.miniage <= age && this.minitrips <= Trips) {//static data member
 			return true;
 		}
 		return false;

@@ -451,15 +451,15 @@ class AppRunner {
 
 	}
 
-	public static void printOndeRide(Ride ride) {
+	public static void printOndeRide(Ride ride,Passenger p) {
 		String StartLocation = ride.getRoute().getStartLocation();
 		String EndLocation = ride.getRoute().getEndLocation();
-		System.out.printf("carcode:%s price:%f available tickets:%d \n", ride.getCar().getCarCode(), ride.getPrice(),
+		System.out.printf("carcode:%s price:%f price After Discount:%f available tickets:%d \n", ride.getCar().getCarCode(), ride.getPrice(),Discount.getDiscount(ride, p),
 				ride.getAvailTickets());
 
 	}
 
-	public static ArrayList<Ride> GetAvailRides(ArrayList<Ride> rides, Route r) {
+	public static ArrayList<Ride> GetAvailRides(ArrayList<Ride> rides, Route r,Passenger p) {
 		ArrayList<Ride> availrides = new ArrayList<Ride>();
 
 		String start = r.getStartLocation();
@@ -475,7 +475,7 @@ class AppRunner {
 			if (start.equalsIgnoreCase(StartRide) && end.equalsIgnoreCase(EndRide)) {
 
 				System.out.print(cnt + " :");
-				printOndeRide(rides.get(i));
+				printOndeRide(rides.get(i),p);
 
 				availrides.add(rides.get(i));
 				cnt++;
@@ -611,7 +611,7 @@ class AppRunner {
 			if (route.getStartLocation().equalsIgnoreCase(StartLocation)
 					&& route.getEndLocation().equalsIgnoreCase(Endlocation)) {
 				System.out.println("rides for this route is \n ");
-				GetAvailRides(rides, route);
+				GetAvailRides(rides, route,new NonSubscriber());
 				return;
 			}
 		}
@@ -680,6 +680,7 @@ class AppRunner {
 		}
 
 	}
+	
 }
 
 class NotInRangeException extends Exception {
@@ -829,7 +830,7 @@ public class CarPooling {
 							TempRouteInput = AppRunner.checkInput(TempRouteInput, false, true);
 							routeNumber = Integer.parseInt(TempRouteInput);
 
-							if (AppRunner.INrange(routeNumber, 1, routes.size() - 1) == false)
+							if (AppRunner.INrange(routeNumber, 1, routes.size()) == false)
 								throw new NotInRangeException(
 										"Exception: not in range you must enter digit within the range \n");
 
@@ -860,7 +861,7 @@ public class CarPooling {
 						}
 					}
 					if (conti) {
-						ArrayList<Ride> AvailRides = AppRunner.GetAvailRides(rides, routes.get(routeNumber));
+						ArrayList<Ride> AvailRides = AppRunner.GetAvailRides(rides, routes.get(routeNumber-1),newpassenger);
 						while (true) {
 							try {
 								System.out.print("Enter ride number : ");
@@ -870,13 +871,15 @@ public class CarPooling {
 								if (AppRunner.INrange(ridenumber, 1, AvailRides.size()) == false)
 									throw new NotInRangeException(
 											"Exception: not in range you must enter digit within the range \n\n");
-
+								
 								Ride r = AvailRides.get(ridenumber - 1);
 								if (r.canAdd()) {
 									r.addPassenger(newpassenger);
 									if (newpassenger instanceof NonSubscriber)
 										passengers.add(newpassenger);
-
+									
+								
+									
 									System.out.println("        reserved successfully     \n \n");
 									break;
 								} else {

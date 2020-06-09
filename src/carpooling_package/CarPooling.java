@@ -869,7 +869,7 @@ public class CarPooling {
 								int ridenumber = Integer.parseInt(TempRide);
 								if (AppRunner.INrange(ridenumber, 1, AvailRides.size()) == false)
 									throw new NotInRangeException(
-											"Exception: not in range you must enter digit within the range \n");
+											"Exception: not in range you must enter digit within the range \n\n");
 
 								Ride r = AvailRides.get(ridenumber - 1);
 								if (r.canAdd()) {
@@ -878,7 +878,7 @@ public class CarPooling {
 										passengers.add(newpassenger);
 
 									System.out.println("        reserved successfully     \n \n");
-
+									break;
 								} else {
 									System.out.println("There is no place in that ride\n");
 									continue;

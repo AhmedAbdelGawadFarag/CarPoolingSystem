@@ -3,153 +3,181 @@
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="carpooling_package.NonSubscriber" project="CarPoolingSystem" 
     file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="135" width="166" x="230" y="405"/>    
+    <position height="135" width="166" x="1155" y="1048"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="carpooling_package.Passenger" project="CarPoolingSystem" 
+  <class id="2" language="java" name="carpooling_package.NoPassengerException" project="CarPoolingSystem" 
     file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="114" x="286" y="266"/>    
+    <position height="81" width="174" x="1044" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <interface id="3" language="java" name="carpooling_package.Iprice" project="CarPoolingSystem" 
+  <class id="3" language="java" name="carpooling_package.CarPooling" project="CarPoolingSystem" 
     file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="149" x="41" y="634"/>    
+    <position height="99" width="113" x="41" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="carpooling_package.Route" project="CarPoolingSystem" 
+    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="164" x="1054" y="747"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="carpooling_package.Ride" project="CarPoolingSystem" 
+    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="225" width="179" x="1058" y="482"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="carpooling_package.Subscriber" project="CarPoolingSystem" 
+    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="149" x="1361" y="1048"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="carpooling_package.Passenger" project="CarPoolingSystem" 
+    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="131" x="1258" y="747"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="carpooling_package.NotInRangeException" project="CarPoolingSystem" 
+    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="164" x="1447" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="carpooling_package.Discount" project="CarPoolingSystem" 
+    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="202" x="194" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="carpooling_package.WrongInputException" project="CarPoolingSystem" 
+    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="164" x="436" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="11" language="java" name="carpooling_package.Isubscribable" project="CarPoolingSystem" 
+    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="166" x="1155" y="1277"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <interface id="4" language="java" name="carpooling_package.Isubscribable" project="CarPoolingSystem" 
+  <class id="12" language="java" name="carpooling_package.Ticket" project="CarPoolingSystem" 
     file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="117" width="166" x="230" y="634"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </interface>  
-  <class id="5" language="java" name="carpooling_package.CarPooling" project="CarPoolingSystem" 
-    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="113" x="162" y="37"/>    
+    <position height="207" width="149" x="1258" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="carpooling_package.Route" project="CarPoolingSystem" 
+  <class id="13" language="java" name="carpooling_package.AppRunner" project="CarPoolingSystem" 
     file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="145" x="436" y="634"/>    
+    <position height="405" width="364" x="640" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="carpooling_package.Ticket" project="CarPoolingSystem" 
+  <class id="14" language="java" name="carpooling_package.Car" project="CarPoolingSystem" 
     file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="698" y="692"/>    
+    <position height="261" width="170" x="844" y="747"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="carpooling_package.Ride" project="CarPoolingSystem" 
-    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="145" x="436" y="405"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="9" language="java" name="carpooling_package.Car" project="CarPoolingSystem" 
-    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="189" width="179" x="436" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="10" language="java" name="carpooling_package.Subscriber" project="CarPoolingSystem" 
-    file="/CarPoolingSystem/src/carpooling_package/CarPooling.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="171" width="149" x="41" y="405"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <realization id="11">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="3"/>  
-  </realization>  
-  <association id="12">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="13" name="ticket"/>      
-      <multiplicity id="14" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="15">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="3"/>  
-  </realization>  
+  <generalization id="15">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
   <realization id="16">    
     <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="4"/>  
+    <end type="TARGET" refId="11"/>  
   </realization>  
   <association id="17">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="18" name="rides"/>      
+    <bendpoint x="1267" y="482"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="18" name="tickets"/>      
       <multiplicity id="19" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="20">    
-    <bendpoint x="445" y="266"/>    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="21" name="car"/>      
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="21" name="ride"/>      
       <multiplicity id="22" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="23">    
+  <association id="23">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="24" name="car"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="26">    
     <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="2"/>  
+    <end type="TARGET" refId="7"/>  
   </generalization>  
-  <association id="24">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="25" name="passengers"/>      
-      <multiplicity id="26" minimum="0" maximum="2147483647"/>    
+  <association id="27">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="28" name="route"/>      
+      <multiplicity id="29" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="27">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <association id="28">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="29" name="route"/>      
-      <multiplicity id="30" minimum="0" maximum="1"/>    
+  <association id="30">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="31" name="passngers"/>      
+      <multiplicity id="32" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

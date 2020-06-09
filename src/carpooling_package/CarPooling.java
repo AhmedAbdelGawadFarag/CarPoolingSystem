@@ -229,6 +229,7 @@ class Ride {
 	}
 
 	public void addPassenger(Passenger p) {
+		
 		double ticketPrice = Discount.getDiscount(this, p);
 		Ticket newTicket = new Ticket(ticketPrice, this);
 		p.addTicket(newTicket);// final method
@@ -382,14 +383,17 @@ class NonSubscriber extends Passenger implements Isubscribable {
 	 */
 	@Override // override
 	public boolean cansubscribe(int age, int Trips) { // overriding
+		
 		if (this.miniage <= age && this.minitrips <= Trips) {// static data member
 			return true;
 		}
 		return false;
+		
 	}
 
 	@Override // override
 	public void DisplayData() {
+		
 		System.out.print("Type:non subscriber \n");
 
 		System.out.print("rides that this passenger took:\n");
@@ -398,10 +402,12 @@ class NonSubscriber extends Passenger implements Isubscribable {
 			Ride ride = ticket.getRide();
 			Route route = ride.getRoute();
 			Car car = ride.getCar();
+			
 			System.out.printf("start location : %s - end location: %s - CarCode %s ", route.getStartLocation(),
 					route.getEndLocation(), car.getCarCode());
 			System.out.printf("ride Price :%f - Ticket Price(after discount):%f \n", ride.getPrice(),
 					ticket.getPrice());
+		
 		}
 	}
 }
@@ -425,9 +431,11 @@ class Subscriber extends Passenger {
 	 * @param reservedTrips the reserved Trips of that passenger
 	 */
 	public Subscriber(String name, int age, int reservedTrips) {
+		
 		this.name = name;
 		this.age = age;
 		this.reservedTrips = reservedTrips;
+		
 	}
 
 	/**
@@ -437,11 +445,16 @@ class Subscriber extends Passenger {
 	 */
 	public Passenger unsubscribe() {
 		Passenger p = new NonSubscriber();
+		
 		for (int i = 0; i < tickets.size(); i++) {
+			
 			Ticket t = tickets.get(i);
 			p.addTicket(t);// final method
+			
 		}
+		
 		return p;
+		
 	}
 
 	/**
@@ -454,7 +467,7 @@ class Subscriber extends Passenger {
 
 	@Override
 	public void DisplayData() {
-		System.out.printf("Type:subscriber name:%s age:%s Reserved trips:%d  \n", this.name, this.age,
+		System.out.printf("Type:subscriber name:%s - age:%s - subscribed trips:%d  \n", this.name, this.age,
 				this.reservedTrips);
 
 		System.out.print("rides that this passenger took:\n");
@@ -465,9 +478,9 @@ class Subscriber extends Passenger {
 			Route route = ride.getRoute();
 			Car car = ride.getCar();
 
-			System.out.printf("start location : %s end location: %s CarCode %s ", route.getStartLocation(),
+			System.out.printf("start location : %s - end location: %s - CarCode %s - ", route.getStartLocation(),
 					route.getEndLocation(), car.getCarCode());
-			System.out.printf("ride Price :%f Ticket Price(after discount):%f \n", ride.getPrice(), ticket.getPrice());
+			System.out.printf("ride Price :%f - Ticket Price(after discount):%f \n", ride.getPrice(), ticket.getPrice());
 		}
 	}
 }
@@ -483,22 +496,27 @@ class AppRunner {
 
 	public static void getallroute(ArrayList<Route> routes) {
 		System.out.println("choose the route you want to reverse a car in it ");
+		
 		for (int i = 0; i < routes.size(); i++) {
 			System.out.printf("%d: start location: %s       end location: %s \n", i + 1,
 					routes.get(i).getStartLocation(), routes.get(i).getEndLocation());
+			
 
 		}
 
 	}
 
 	public static void RoutesTocomplain(ArrayList<Route> routes) {
+		
 		System.out.println("choose the route you want to review a car in it ");
 		for (int i = 0; i < routes.size(); i++) {
+			
 			System.out.printf("%d: start location: %s       end location: %s \n", i + 1,
 					routes.get(i).getStartLocation(), routes.get(i).getEndLocation());
-
+			
 		}
 
+		
 	}
 
 	public static void printOndeRide(Ride ride, Passenger p) {
@@ -584,11 +602,13 @@ class AppRunner {
 				System.out.println("choose what you want to do \n");
 				System.out.println("1-:add review");
 				System.out.println("2-:Get review");
+				
 				String choice = input.next();
 				choice = checkInput(choice, false, true);
 				int cho = Integer.parseInt(choice);
 				if (INrange(cho, 1, 2) == false)
 					throw new NotInRangeException("Exception: not in range excaption \n\n");
+				
 				if (cho == 1) {
 					System.out.print("type car code  number \n");
 					String carCode = input.next();
@@ -873,11 +893,10 @@ public class CarPooling {
 
 		passengers = new ArrayList<Passenger>();
 		passengers.add(new Subscriber("ahmed", 23, 2));// Subscriber1
-		passengers.add(new Subscriber("Mohamed", 26, 4));// Subscriber2
-		passengers.add(new Subscriber("isaac", 14, 3));// Subscriber3
+		passengers.add(new Subscriber("isaac", 14, 3));// Subscriber2
 
+		passengers.add(new NonSubscriber());// Subscriber3
 		passengers.add(new NonSubscriber());// Subscriber4
-		passengers.add(new NonSubscriber());// Subscriber5
 
 		routes = new ArrayList<Route>(); // routes
 		routes.add(new Route("nasr city", "shoubra"));
@@ -906,23 +925,27 @@ public class CarPooling {
 		rides = new ArrayList<Ride>();// rides
 
 		rides.add(new Ride(routes.get(0), cars.get(0), 125));// ride 1
-		rides.get(0).addPassenger(passengers.get(0));
-		rides.get(0).addPassenger(passengers.get(3));
-		rides.get(0).addPassenger(passengers.get(1));
+		rides.get(0).addPassenger(passengers.get(0));//passenger 1 reserved ride 1
+		rides.get(0).addPassenger(passengers.get(1));//passenger 2 reserved ride 1
 
-		rides.add(new Ride(routes.get(1), cars.get(0), 75));
-		rides.get(1).addPassenger(passengers.get(1));
-		rides.get(1).addPassenger(passengers.get(4));
+		
+		rides.add(new Ride(routes.get(1), cars.get(0), 75));//ride 2
+		rides.get(1).addPassenger(passengers.get(1));//passenger 2 reserved ride 2
+		rides.get(1).addPassenger(passengers.get(2));//passenger 3 reserved ride 2
 
-		rides.add(new Ride(routes.get(0), cars.get(1), 100));
-		rides.get(2).addPassenger(passengers.get(0));
-		rides.get(2).addPassenger(passengers.get(4));
+		
+		rides.add(new Ride(routes.get(0), cars.get(1), 100));//ride 3
+		rides.get(2).addPassenger(passengers.get(2));//passenger 3 reserved ride 3
+		
+		
+		rides.add(new Ride(routes.get(3), cars.get(3), 35));//ride 4
+		rides.get(2).addPassenger(passengers.get(0));//passenger 0 reserved ride 4
+		
+		
+		rides.add(new Ride(routes.get(2), cars.get(2), 35));//ride 5
 
-		rides.add(new Ride(routes.get(3), cars.get(3), 35));
-
-		rides.add(new Ride(routes.get(2), cars.get(2), 35));
-
-		rides.add(new Ride(routes.get(4), cars.get(2), 35));
+		
+		rides.add(new Ride(routes.get(4), cars.get(2), 35));//ride 6
 
 		while (true) {
 			System.out.println("enter (1 or 2 or 3 or .......) to choose ");
@@ -931,7 +954,8 @@ public class CarPooling {
 			System.out.println("3- unsubscribe");
 			System.out.println("4- Display Data");
 			System.out.println("5- Search for route");
-			System.out.println("6- Get / Add review");
+			System.out.println("6- Report Complaint/Review.");
+			
 			input = new Scanner(System.in);
 			int choice = -1;
 			try {
